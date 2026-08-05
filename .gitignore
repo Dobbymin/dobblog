@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# harness workspace
+_workspace/
+_workspace_prev_*/
+
+# omc session data
+.omc/

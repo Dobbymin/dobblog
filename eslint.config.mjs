@@ -1,18 +1,39 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
+import { FlatCompat } from '@eslint/eslintrc';
+import unusedImports from 'eslint-plugin-unused-imports';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
-  // Override default ignores of eslint-config-next.
-  globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
-]);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const compat = new FlatCompat({
+	baseDirectory: __dirname,
+});
+
+const eslintConfig = [
+	...compat.extends(
+		'next/core-web-vitals',
+		'next/typescript',
+		'plugin:react/jsx-runtime',
+		'prettier',
+	),
+	{
+		plugins: {
+			'unused-imports': unusedImports,
+		},
+		rules: {
+			'@typescript-eslint/no-unused-vars': 'warn',
+			'react/jsx-sort-props': [
+				'warn',
+				{
+					callbacksLast: true,
+					shorthandFirst: true,
+					noSortAlphabetically: false,
+					reservedFirst: true,
+				},
+			],
+		},
+	},
+];
 
 export default eslintConfig;
