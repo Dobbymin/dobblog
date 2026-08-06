@@ -9,19 +9,35 @@ export function useHeader(variant: HeaderVariant) {
   const searchTriggerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (variant !== 'home' && variant !== 'about') return;
+    if (variant !== 'home' && variant !== 'about' && variant !== 'article')
+      return;
 
     let animationFrame = 0;
     const updateScrollState = () => {
       window.cancelAnimationFrame(animationFrame);
       animationFrame = window.requestAnimationFrame(() => {
         const scrollPosition = window.scrollY;
-        const headerOffset = Math.max(0, 32 - scrollPosition);
-        headerRef.current?.style.setProperty(
-          '--home-header-offset',
-          `${headerOffset}px`,
+
+        if (variant === 'home' || variant === 'about') {
+          const headerOffset = Math.max(0, 32 - scrollPosition);
+          headerRef.current?.style.setProperty(
+            '--home-header-offset',
+            `${headerOffset}px`,
+          );
+          setIsScrolled(scrollPosition > 300);
+          return;
+        }
+
+        const headerHeight = headerRef.current?.offsetHeight ?? 80;
+        const heroBottom = document
+          .querySelector('.article-hero')
+          ?.getBoundingClientRect().bottom;
+
+        setIsScrolled(
+          heroBottom === undefined
+            ? scrollPosition > 300
+            : heroBottom <= headerHeight,
         );
-        setIsScrolled(scrollPosition > 300);
       });
     };
 

@@ -1068,8 +1068,9 @@ a:focus-visible {
   );
 }
 .article-site-header {
-  background: transparent;
+  background: var(--color-sky-subtle);
   border-bottom: 0;
+  transition: background 350ms cubic-bezier(0.41, 0.1, 0.13, 1);
 }
 .about-site-header {
   background: var(--about-hero-background);
@@ -1137,6 +1138,9 @@ a:focus-visible {
 .home-site-header.is-scrolled,
 .about-site-header.is-scrolled {
   background: linear-gradient(to top, transparent 0, var(--background) 100%);
+}
+.article-site-header.is-scrolled {
+  background: var(--background);
 }
 .home-site-header .site-header-inner,
 .about-site-header .site-header-inner {
