@@ -106,7 +106,11 @@ export function MobileNav() {
               >
                 GitHub
               </a>
-              <Link href={ROUTES_PATH.ABOUT} onClick={() => setIsOpen(false)}>
+              <Link
+                href={ROUTES_PATH.ABOUT}
+                onClick={() => setIsOpen(false)}
+                transitionTypes={['article-forward']}
+              >
                 About
               </Link>
             </nav>

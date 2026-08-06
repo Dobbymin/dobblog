@@ -22,7 +22,7 @@ export const HeaderClient = ({ searchPosts, variant }: HeaderClientProps) => {
   const searchTriggerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (variant !== 'home') return;
+    if (variant !== 'home' && variant !== 'about') return;
 
     let animationFrame = 0;
     const updateScrollState = () => {
@@ -68,7 +68,9 @@ export const HeaderClient = ({ searchPosts, variant }: HeaderClientProps) => {
             className='wordmark'
             href={ROUTES_PATH.HOME}
             transitionTypes={
-              variant === 'article' ? ['article-back'] : undefined
+              variant === 'article' || variant === 'about'
+                ? ['article-back']
+                : undefined
             }
           >
             dobby_min
@@ -88,7 +90,12 @@ export const HeaderClient = ({ searchPosts, variant }: HeaderClientProps) => {
             >
               GitHub
             </a>
-            <Link href={ROUTES_PATH.ABOUT}>About</Link>
+            <Link
+              href={ROUTES_PATH.ABOUT}
+              transitionTypes={['article-forward']}
+            >
+              About
+            </Link>
           </nav>
           <div className='header-actions'>
             <Button

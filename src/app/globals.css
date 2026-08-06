@@ -26,8 +26,6 @@
   --footer-muted: rgb(41 78 96);
   --about-hero-background: var(--color-sky-from);
   --about-hero-foreground: hsl(222deg 22% 14%);
-  --about-cloud-back: var(--color-cloud-500);
-  --about-cloud-middle: var(--color-cloud-300);
   --font-sans: var(--font-pretendard), system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
@@ -54,8 +52,6 @@
   --footer-muted: rgb(175 207 222);
   --about-hero-background: hsl(210deg 15% 6%);
   --about-hero-foreground: hsl(210deg 25% 92%);
-  --about-cloud-back: hsl(210deg 10% 24%);
-  --about-cloud-middle: hsl(210deg 12% 16%);
 }
 
 * {
@@ -1054,13 +1050,9 @@ a:focus-visible {
   text-align: left;
 }
 
-.home-site-header {
+.home-site-header,
+.about-site-header {
   --home-header-offset: 32px;
-  background: linear-gradient(
-    to top,
-    transparent 0,
-    var(--color-sky-from) 100%
-  );
   border-bottom: 0;
   left: 0;
   position: fixed;
@@ -1068,13 +1060,19 @@ a:focus-visible {
   top: var(--home-header-offset);
   transition: background 350ms cubic-bezier(0.41, 0.1, 0.13, 1);
 }
+.home-site-header {
+  background: linear-gradient(
+    to top,
+    transparent 0,
+    var(--color-sky-from) 100%
+  );
+}
 .article-site-header {
   background: transparent;
   border-bottom: 0;
 }
 .about-site-header {
   background: var(--about-hero-background);
-  border-bottom: 0;
 }
 .home-site-header .wordmark,
 .home-site-header .desktop-nav a,
@@ -1136,10 +1134,12 @@ a:focus-visible {
 .dark .article-site-header .wordmark {
   color: var(--accent);
 }
-.home-site-header.is-scrolled {
+.home-site-header.is-scrolled,
+.about-site-header.is-scrolled {
   background: linear-gradient(to top, transparent 0, var(--background) 100%);
 }
-.home-site-header .site-header-inner {
+.home-site-header .site-header-inner,
+.about-site-header .site-header-inner {
   height: 80px;
 }
 
@@ -1373,7 +1373,8 @@ a:focus-visible {
   .footer-cloudscape-front {
     transform: translate(100px, -1px);
   }
-  .home-site-header {
+  .home-site-header,
+  .about-site-header {
     top: 0;
   }
   .home-site-header .site-header-inner {

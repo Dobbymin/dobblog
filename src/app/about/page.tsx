@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { Badge, Cloud, GithubIcon } from '@/components';
+import { Badge, Cloud, GithubIcon, PageTransition } from '@/components';
 import { EXTERNAL_ROUTES_PATH } from '@/constants';
 import { Footer, Header } from '@/layout';
 import { ArrowUpRight } from 'lucide-react';
@@ -46,87 +46,82 @@ const techStack = [
 
 export default function AboutPage() {
   return (
-    <div className='about-route'>
-      <Header variant='about' />
-      <main>
-        <section className='about-hero'>
-          <div className='site-shell about-hero-content'>
-            <h1>
-              강민 <span>Dobbymin</span>
-            </h1>
-            <p>
-              웹 프론트엔드 개발자를 꿈꾸고 있습니다.
-              <br />
-              React와 TypeScript를 주로 공부하고 있습니다.
-            </p>
-            <a
-              className='about-github-link'
-              href={EXTERNAL_ROUTES_PATH.GITHUB}
-              rel='noreferrer'
-              target='_blank'
-            >
-              <GithubIcon height={18} width={18} />
-              GitHub profile
-              <ArrowUpRight aria-hidden='true' size={16} />
-            </a>
-          </div>
-          <div className='about-hero-clouds'>
-            <Cloud
-              height='357px'
-              layers={[
-                { color: 'var(--about-cloud-back)' },
-                { color: 'var(--about-cloud-middle)' },
-                { color: 'var(--background)' },
-              ]}
-            />
-          </div>
-        </section>
-
-        <div className='site-shell about-content'>
-          <section className='about-section'>
-            <header className='about-section-header'>
-              <p>Activity experience</p>
-              <h2>배우고, 만들고, 함께한 경험</h2>
-            </header>
-            <div className='about-timeline'>
-              {activities.map(({ items, year }) => (
-                <article className='about-year' key={year}>
-                  <h3>{year}</h3>
-                  <ul>
-                    {items.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
+    <PageTransition>
+      <div className='route-transition-page about-route'>
+        <Header variant='about' />
+        <main>
+          <section className='about-hero'>
+            <div className='site-shell about-hero-content'>
+              <h1>
+                강민 <span>Dobbymin</span>
+              </h1>
+              <p>
+                웹 프론트엔드 개발자를 꿈꾸고 있습니다.
+                <br />
+                React와 TypeScript를 주로 공부하고 있습니다.
+              </p>
+              <a
+                className='about-github-link'
+                href={EXTERNAL_ROUTES_PATH.GITHUB}
+                rel='noreferrer'
+                target='_blank'
+              >
+                <GithubIcon height={18} width={18} />
+                GitHub profile
+                <ArrowUpRight aria-hidden='true' size={16} />
+              </a>
+            </div>
+            <div className='about-hero-clouds'>
+              <Cloud height='357px' variant='article' viewBoxHeight={357} />
             </div>
           </section>
 
-          <section className='about-section about-tech-section'>
-            <header className='about-section-header'>
-              <p>Tech Stack</p>
-              <h2>주로 사용하는 기술</h2>
-            </header>
-            <div className='about-tech-list'>
-              {techStack.map(({ color, label }) => (
-                <Badge
-                  className='about-tech-badge'
-                  key={label}
-                  variant='outline'
-                >
-                  <span
-                    aria-hidden='true'
-                    className='about-tech-dot'
-                    style={{ backgroundColor: color }}
-                  />
-                  {label}
-                </Badge>
-              ))}
-            </div>
-          </section>
-        </div>
-      </main>
-      <Footer />
-    </div>
+          <div className='site-shell about-content'>
+            <section className='about-section'>
+              <header className='about-section-header'>
+                <p>Activity experience</p>
+                <h2>배우고, 만들고, 함께한 경험</h2>
+              </header>
+              <div className='about-timeline'>
+                {activities.map(({ items, year }) => (
+                  <article className='about-year' key={year}>
+                    <h3>{year}</h3>
+                    <ul>
+                      {items.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className='about-section about-tech-section'>
+              <header className='about-section-header'>
+                <p>Tech Stack</p>
+                <h2>주로 사용하는 기술</h2>
+              </header>
+              <div className='about-tech-list'>
+                {techStack.map(({ color, label }) => (
+                  <Badge
+                    className='about-tech-badge'
+                    key={label}
+                    variant='outline'
+                  >
+                    <span
+                      aria-hidden='true'
+                      className='about-tech-dot'
+                      style={{ backgroundColor: color }}
+                    />
+                    {label}
+                  </Badge>
+                ))}
+              </div>
+            </section>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    </PageTransition>
   );
 }
