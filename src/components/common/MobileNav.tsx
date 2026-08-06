@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { useEffect, useRef, useState } from 'react';
 
+import { Button } from '@/components/ui';
 import {
   EXTERNAL_ROUTES_PATH,
   ROUTES_PATH,
@@ -50,16 +51,18 @@ export function MobileNav() {
 
   return (
     <div className='mobile-nav'>
-      <button
+      <Button
         aria-controls='mobile-navigation'
         aria-expanded={isOpen}
         aria-label='메뉴 열기'
         className='icon-button'
         onClick={() => setIsOpen(true)}
+        size='icon'
         type='button'
+        variant='ghost'
       >
         <Menu size={21} />
-      </button>
+      </Button>
       {isOpen && (
         <div
           className='mobile-nav-overlay'
@@ -76,14 +79,16 @@ export function MobileNav() {
           >
             <div className='mobile-nav-topline'>
               <span>dobbymin</span>
-              <button
+              <Button
                 aria-label='메뉴 닫기'
                 className='icon-button'
                 onClick={() => setIsOpen(false)}
+                size='icon'
                 type='button'
+                variant='ghost'
               >
                 <X size={21} />
-              </button>
+              </Button>
             </div>
             <nav>
               <Link href={ROUTES_PATH.ARTICLES} onClick={() => setIsOpen(false)}>

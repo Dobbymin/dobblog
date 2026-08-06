@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 
 import { useState } from 'react';
 
+import { Input } from '@/components/ui';
 import { DYNAMIC_ROUTES_PATH, ROUTES_PATH } from '@/constants';
 import type { PostMetadata } from '@/lib/posts';
 import { Search, X } from 'lucide-react';
@@ -44,7 +45,7 @@ export function ArticleExplorer({ posts }: ArticleExplorerProps) {
         role='search'
       >
         <Search aria-hidden='true' size={18} strokeWidth={2.25} />
-        <input
+        <Input
           aria-label='글 검색'
           name='q'
           onChange={(event) => setTypedQuery(event.target.value)}

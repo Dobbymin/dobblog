@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { Cloud } from '@/components';
+import { Separator } from '@/components/ui';
 import { DYNAMIC_ROUTES_PATH } from '@/constants';
 import { Footer, Header } from '@/layout';
 import { posts } from '@/lib/posts';
@@ -29,7 +30,9 @@ export default function Home() {
                 >
                   Read more <ArrowRight size={18} />
                 </Link>
-                {index < posts.length - 1 && <hr />}
+                {index < posts.length - 1 && (
+                  <Separator className='home-article-separator' />
+                )}
               </article>
             ))}
           </section>

@@ -932,9 +932,7 @@ h1 em,
 .read-more:hover {
   color: hsl(334deg 82% 52%);
 }
-.home-article hr {
-  border: 0;
-  border-top: 1px solid var(--line);
+.home-article-separator {
   margin: 35px 0 0;
 }
 .home-aside {
@@ -1029,7 +1027,7 @@ h1 em,
     font-size: 0.95rem;
     margin: 13px 0 15px;
   }
-  .home-article hr {
+  .home-article-separator {
     margin-top: 28px;
   }
   .home-aside {

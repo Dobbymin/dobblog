@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { Badge } from '@/components/ui';
 import { DYNAMIC_ROUTES_PATH } from '@/constants';
 import { type PostMetadata, formatDate } from '@/lib/posts';
 import { ArrowUpRight } from 'lucide-react';
@@ -25,7 +26,9 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
       <p>{post.description}</p>
       <div aria-label='태그' className='tag-list'>
         {post.tags.map((tag) => (
-          <span key={tag}>{tag}</span>
+          <Badge key={tag} variant='secondary'>
+            {tag}
+          </Badge>
         ))}
       </div>
     </article>

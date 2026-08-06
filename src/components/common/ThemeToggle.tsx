@@ -2,6 +2,8 @@
 
 import { SunMoon } from 'lucide-react';
 
+import { Button } from '@/components/ui';
+
 const storageKey = 'dobbymin-color-theme';
 
 export function ThemeToggle() {
@@ -14,13 +16,15 @@ export function ThemeToggle() {
   };
 
   return (
-    <button
+    <Button
       aria-label='테마 전환'
       className='icon-button'
       onClick={toggleTheme}
+      size='icon'
       type='button'
+      variant='ghost'
     >
       <SunMoon size={18} strokeWidth={2.25} />
-    </button>
+    </Button>
   );
 }
