@@ -1,12 +1,15 @@
 import Link from 'next/link';
 
-import { CloudSection } from '@/components';
+import { CloudSection, HeroArtwork } from '@/components';
 import { Code2, Rss } from 'lucide-react';
 
 export const Footer = () => {
   return (
     <footer className='site-footer'>
-      <CloudSection sectionBgColor='var(--color-footer)' />
+      <div className='footer-clouds'>
+        <CloudSection sectionBgColor='var(--color-footer)' />
+        <HeroArtwork variant='footer' />
+      </div>
       <div className='footer-content'>
         <div className='site-shell footer-grid'>
           <div>
@@ -14,6 +17,23 @@ export const Footer = () => {
               dobbymin<span>’s</span>
             </Link>
             <p>개발 경험을 기록합니다.</p>
+          </div>
+          <div>
+            <h2>Browse By Category</h2>
+            <ul>
+              <li>
+                <Link href='/articles?tag=AI'>AI</Link>
+              </li>
+              <li>
+                <Link href='/articles?tag=Terminal'>Terminal</Link>
+              </li>
+              <li>
+                <Link href='/articles?tag=Workflow'>Workflow</Link>
+              </li>
+              <li>
+                <Link href='/articles?tag=CLI'>CLI</Link>
+              </li>
+            </ul>
           </div>
           <div>
             <h2>Explore</h2>

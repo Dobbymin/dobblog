@@ -36,10 +36,17 @@ const pixelPositions = [
   [77, 77],
 ];
 
-export function HeroArtwork() {
+type HeroArtworkProps = {
+  variant?: 'hero' | 'footer';
+};
+
+export function HeroArtwork({ variant = 'hero' }: HeroArtworkProps) {
   return (
-    <div aria-hidden='true' className='hero-artwork'>
-      <svg className='pixel-arc' viewBox='0 0 100 100'>
+    <div
+      aria-hidden='true'
+      className={`hero-artwork ${variant === 'footer' ? 'footer-artwork' : ''}`}
+    >
+      {variant === 'hero' && <svg className='pixel-arc' viewBox='0 0 100 100'>
         {pixelPositions.map(([x, y], index) => (
           <rect
             fill={`url(#pixel-gradient-${index % 3})`}
@@ -66,7 +73,7 @@ export function HeroArtwork() {
             <stop offset='1' stopColor='#ff6d77' />
           </linearGradient>
         </defs>
-      </svg>
+      </svg>}
       <div className='mascot'>
         <div className='mascot-hair' />
         <div className='mascot-face'>
