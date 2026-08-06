@@ -666,6 +666,34 @@ h1 em,
   line-height: 1.5;
   margin: 32px 0 0;
 }
+.search-overlay-cloud {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  left: 0;
+  position: absolute;
+  right: 0;
+  transform: translateY(calc(100% - 2px));
+  width: 100%;
+  z-index: -1;
+}
+.search-overlay-cloud svg {
+  --initial-x-scale: 0.8;
+  --final-y-translate: -30%;
+  animation: search-overlay-cloud-bubble-in 600ms backwards;
+  display: block;
+  min-width: 2000px;
+  pointer-events: none;
+  transform: scale(1, 2) translate(0, var(--final-y-translate));
+  transform-origin: center top;
+  transition: transform 1s;
+  will-change: transform;
+}
+.search-overlay-cloud path {
+  pointer-events: auto;
+}
 @keyframes search-overlay-slide-in {
   from {
     transform: translateY(-100%);
@@ -680,6 +708,14 @@ h1 em,
   }
   to {
     opacity: 1;
+  }
+}
+@keyframes search-overlay-cloud-bubble-in {
+  from {
+    transform: scale(var(--initial-x-scale), 0) translate(0);
+  }
+  to {
+    transform: scaleY(2) translateY(var(--final-y-translate));
   }
 }
 
@@ -1537,9 +1573,31 @@ h1 em,
 
 @media (prefers-reduced-motion: reduce) {
   .search-overlay,
+  .search-overlay-cloud svg,
   .search-overlay-close,
   .search-overlay-form {
     animation: none;
+  }
+  .search-overlay-cloud svg {
+    transition: none;
+  }
+}
+
+@media (min-width: 90rem) {
+  .search-overlay-cloud svg {
+    --final-y-translate: 0%;
+  }
+}
+
+@media (min-width: 100rem) {
+  .search-overlay-cloud svg {
+    --initial-x-scale: 0.9;
+  }
+}
+
+@media (min-width: 115rem) {
+  .search-overlay-cloud svg {
+    --initial-x-scale: 1;
   }
 }
 
