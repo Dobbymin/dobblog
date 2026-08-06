@@ -26,6 +26,7 @@ export type PostMetadata = {
   date: string;
   readingTime: string;
   tags: string[];
+  headings: string[];
 };
 
 export type Post = PostMetadata & {
@@ -48,6 +49,16 @@ export const posts = [
   toPost(bitcoinStrategyMetadata, BitcoinStrategy),
   toPost(claudeMdMetadata, ClaudeMd),
 ].sort((a, b) => b.date.localeCompare(a.date));
+
+export const postSummaries: PostMetadata[] = posts.map((post) => ({
+  date: post.date,
+  description: post.description,
+  headings: post.headings,
+  readingTime: post.readingTime,
+  slug: post.slug,
+  tags: post.tags,
+  title: post.title,
+}));
 
 export function getPost(slug: string) {
   return posts.find((post) => post.slug === slug);

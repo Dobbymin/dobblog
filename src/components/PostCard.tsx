@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
-import { type Post, formatDate } from '@/lib/posts';
+import { type PostMetadata, formatDate } from '@/lib/posts';
 import { ArrowUpRight } from 'lucide-react';
 
 type PostCardProps = {
-  post: Post;
+  post: PostMetadata;
   variant?: 'compact' | 'default';
 };
 

@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 
-import { PostCard } from '@/components';
+import { Suspense } from 'react';
+
+import { ArticleExplorer } from '@/components';
 import { Footer, Header } from '@/layout';
-import { posts } from '@/lib/posts';
+import { postSummaries } from '@/lib/posts';
 
 export const metadata: Metadata = {
   title: 'Articles | dobbymin',
@@ -19,11 +21,9 @@ export default function ArticlesPage() {
           <h1>Articles</h1>
           <p>개발, 프로젝트, 운영에서 얻은 기록입니다.</p>
         </div>
-        <div className='article-list'>
-          {posts.map((post) => (
-            <PostCard key={post.slug} post={post} />
-          ))}
-        </div>
+        <Suspense fallback={<div className='article-list-skeleton' />}>
+          <ArticleExplorer posts={postSummaries} />
+        </Suspense>
       </main>
       <Footer />
     </>

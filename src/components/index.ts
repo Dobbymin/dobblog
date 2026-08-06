@@ -1,4 +1,6 @@
 export * from './common';
+export { ArticleExplorer } from './ArticleExplorer';
+export { ArticleToc } from './ArticleToc';
 export { Cloud } from './Cloud';
 export { CloudSection } from './CloudSection';
 export { MobileNav } from './MobileNav';

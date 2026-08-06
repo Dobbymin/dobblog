@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { ArticleToc } from '@/components';
 import { Footer, Header } from '@/layout';
 import { formatDate, getPost, posts } from '@/lib/posts';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -57,9 +58,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             ))}
           </div>
         </header>
-        <article className='prose'>
-          <Content />
-        </article>
+        <div className='article-layout'>
+          <article className='prose'>
+            <Content />
+          </article>
+          <ArticleToc headings={post.headings} />
+        </div>
         <nav aria-label='글 탐색' className='article-pagination'>
           {previousPost ? (
             <Link href={`/articles/${previousPost.slug}`}>

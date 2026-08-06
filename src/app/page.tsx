@@ -47,15 +47,22 @@ export default function Home() {
             <p className='eyebrow'>Browse by topic</p>
             <h2>관심사 따라 읽기</h2>
             <div className='topic-list'>
-              {['AI & Agent', 'Terminal', 'Workflow', 'CLI', 'Investing'].map(
-                (topic, index) => (
-                  <Link href='/articles' key={topic}>
-                    <span>0{index + 1}</span>
-                    {topic}
-                    <ArrowRight size={18} />
-                  </Link>
-                ),
-              )}
+              {[
+                ['AI & Agent', 'AI'],
+                ['Terminal', 'Terminal'],
+                ['Workflow', 'Workflow'],
+                ['CLI', 'CLI'],
+                ['Investing', '투자'],
+              ].map(([topic, tag], index) => (
+                <Link
+                  href={`/articles?tag=${encodeURIComponent(tag)}`}
+                  key={topic}
+                >
+                  <span>0{index + 1}</span>
+                  {topic}
+                  <ArrowRight size={18} />
+                </Link>
+              ))}
             </div>
           </div>
         </section>
