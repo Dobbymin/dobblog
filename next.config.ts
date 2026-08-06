@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import createMDX from '@next/mdx';
 
 const nextConfig: NextConfig = {
 	/* config options here */
@@ -12,4 +13,8 @@ const nextConfig: NextConfig = {
 	serverExternalPackages: ['gray-matter'],
 };
 
-export default nextConfig;
+const withMDX = createMDX({
+	extension: /\.mdx$/,
+});
+
+export default withMDX(nextConfig);

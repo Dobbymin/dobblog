@@ -1,0 +1,54 @@
+export const metadata = {
+  slug: 'ghostty-ssh',
+  title: 'Ghostty SSH 라즈베리파이 입력 밀림 문제 해결 기록',
+  description:
+    'xterm-ghostty terminfo 호환성 문제를 진단하고 안정적으로 복구한 과정.',
+  date: '2026-08-03',
+  readingTime: '8 min read',
+  tags: ['Terminal', 'SSH', 'Raspberry Pi'],
+};
+
+## 결론 요약
+
+Ghostty에서 라즈베리파이에 SSH로 접속했을 때, 입력 글자가 중복되거나 밀려 보였다. iTerm2에서는 정상 동작했기에 SSH나 쉘 자체보다 Ghostty의 터미널 규격과 원격 서버 인식 사이의 호환성 문제로 판단했다.
+
+핵심 원인은 원격 Linux/Zsh 환경이 Ghostty 기본 터미널 타입인 `xterm-ghostty`를 제대로 인식하지 못한 점이었다. 최종 해결은 Ghostty의 `TERM` 값을 `xterm-256color`로 고정하고 SSH shell integration을 활성화하는 방식이었다.
+
+## 문제 상황
+
+- `ls`를 입력하면 `lslslslslslssllsslls`처럼 중복 렌더링됨
+- 같은 서버와 쉘 환경에서 iTerm2는 정상 동작
+- 실제 입력값과 화면 표시가 어긋나 작업이 어려움
+
+## 원인
+
+원격 서버가 terminfo를 알지 못하면 terminal columns, 커서 이동, 줄바꿈, redraw 방식을 잘못 해석할 수 있다. 이번 증상은 명령어가 여러 번 입력된 것이 아니라, 화면을 다시 그리는 과정의 잔상과 중복 렌더링에 가까웠다.
+
+## 임시 복구
+
+```sh
+export TERM=xterm-256color
+stty sane
+```
+
+`TERM`을 널리 지원되는 값으로 바꾸고, `stty sane`으로 꼬인 터미널 입출력 상태를 기본값으로 되돌린다.
+
+## 영구 해결
+
+Ghostty 설정 파일 `~/.config/ghostty/config`에 다음 값을 추가했다.
+
+```ini
+term = "xterm-256color"
+shell-integration-features = "ssh-terminfo,ssh-env"
+```
+
+설정 저장 후 Ghostty를 완전히 종료하고 다시 실행한 뒤 SSH로 재접속했다. 원격 Zsh에서도 입력 밀림, 커서 위치, 줄바꿈이 정상화됐다.
+
+## 재발 시 체크리스트
+
+1. `echo $TERM`으로 원격 터미널 타입 확인
+2. `stty size`로 크기 인식 상태 확인
+3. `export TERM=xterm-256color`와 `stty sane` 실행
+4. Ghostty의 `term`과 shell integration 설정 확인
+
+터미널에 입력이 중복되어 보인다고 해서 실제 키 입력이 항상 여러 번 전달된 것은 아니다. SSH 환경에서는 `TERM`, terminfo, `stty` 상태만 어긋나도 화면 렌더링이 크게 꼬일 수 있다.

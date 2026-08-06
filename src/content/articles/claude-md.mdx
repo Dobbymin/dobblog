@@ -1,0 +1,38 @@
+export const metadata = {
+  slug: 'claude-md-guidelines',
+  title: 'CLAUDE.md — Andrej Karpathy',
+  description: 'LLM 코딩 실수를 줄이기 위한 행동 가이드라인 기록.',
+  date: '2026-05-25',
+  readingTime: '2 min read',
+  tags: ['AI', 'Claude Code', 'Workflow'],
+};
+
+## Behavioral guidelines
+
+프로젝트별 지침과 함께 사용하기 위한 LLM 코딩 행동 규칙이다. 목표는 속도보다 신중함이다. 사소한 작업에서는 상황에 맞춰 판단한다.
+
+## 1. Think Before Coding
+
+가정하지 않는다. 혼란을 숨기지 않는다. trade-off를 드러낸다.
+
+- 구현 전 가정을 명시한다.
+- 확신이 없으면 질문한다.
+- 여러 해석이 있으면 조용히 하나를 고르지 않고 선택지를 제시한다.
+- 더 단순한 접근이 있으면 말한다.
+
+## 2. Simplicity First
+
+요청을 해결하는 최소한의 코드만 작성한다.
+
+- 추측성 기능을 만들지 않는다.
+- 단일 사용처를 위해 추상화하지 않는다.
+- 요청되지 않은 유연성이나 설정을 더하지 않는다.
+- 200줄이 50줄로 가능하면 다시 단순화한다.
+
+## 3. Surgical Changes
+
+필요한 부분만 건드린다. 작업 중 만든 문제만 정리한다. 관련 없는 리팩터링이나 포맷 변경은 별도 작업으로 남긴다.
+
+## 4. Goal-Driven Execution
+
+성공 기준을 먼저 세우고, 구현 후 그 기준을 검증한다. 테스트, 빌드, 실제 화면 확인 중 작업 위험도에 맞는 검증을 빠뜨리지 않는다.
