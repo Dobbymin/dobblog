@@ -20,7 +20,7 @@ export const Header = ({ variant = 'default' }: HeaderProps) => {
   const [isSoundMuted, setIsSoundMuted] = useState(false);
 
   useEffect(() => {
-    if (variant !== 'home') return;
+    if (variant === 'default') return;
 
     const updateScrollState = () => setIsScrolled(window.scrollY > 24);
     const animationFrame = window.requestAnimationFrame(updateScrollState);
@@ -62,7 +62,7 @@ export const Header = ({ variant = 'default' }: HeaderProps) => {
                 className='icon-button'
                 href={ROUTES_PATH.ARTICLES}
               >
-                <Search size={18} strokeWidth={2.25} />
+                <Search size={20} strokeWidth={2} />
               </Link>
               <button
                 aria-label={isSoundMuted ? '사운드 켜기' : '사운드 끄기'}
@@ -71,9 +71,9 @@ export const Header = ({ variant = 'default' }: HeaderProps) => {
                 type='button'
               >
                 {isSoundMuted ? (
-                  <VolumeX size={18} strokeWidth={2.25} />
+                  <VolumeX size={20} strokeWidth={2} />
                 ) : (
-                  <Volume2 size={18} strokeWidth={2.25} />
+                  <Volume2 size={20} strokeWidth={2} />
                 )}
               </button>
               <ThemeToggle />
@@ -82,7 +82,7 @@ export const Header = ({ variant = 'default' }: HeaderProps) => {
                 className='icon-button'
                 href={ROUTES_PATH.RSS}
               >
-                <Rss size={18} strokeWidth={2.25} />
+                <Rss size={20} strokeWidth={2} />
               </a>
             </>
           ) : (
