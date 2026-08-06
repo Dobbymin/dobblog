@@ -18,7 +18,10 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
         <span>{post.readingTime}</span>
       </div>
       <h3>
-        <Link href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}>
+        <Link
+          href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}
+          transitionTypes={['article-forward']}
+        >
           {post.title}
           <ArrowUpRight aria-hidden='true' size={18} strokeWidth={2.25} />
         </Link>

@@ -27,11 +27,13 @@ function HighlightedText({ query, text }: { query: string; text: string }) {
   const pattern = new RegExp(`(${tokens.map(escapeRegExp).join('|')})`, 'giu');
   const normalizedTokens = new Set(tokens.map(normalize));
 
-  return text.split(pattern).map((part, index) => (
-    <Fragment key={`${part}-${index}`}>
-      {normalizedTokens.has(normalize(part)) ? <mark>{part}</mark> : part}
-    </Fragment>
-  ));
+  return text
+    .split(pattern)
+    .map((part, index) => (
+      <Fragment key={`${part}-${index}`}>
+        {normalizedTokens.has(normalize(part)) ? <mark>{part}</mark> : part}
+      </Fragment>
+    ));
 }
 
 export function SearchOverlay({ onDismiss, posts }: SearchOverlayProps) {
@@ -42,12 +44,9 @@ export function SearchOverlay({ onDismiss, posts }: SearchOverlayProps) {
 
     return posts.filter((post) => {
       const searchableText = normalize(
-        [
-          post.title,
-          post.description,
-          ...post.tags,
-          ...post.headings,
-        ].join(' '),
+        [post.title, post.description, ...post.tags, ...post.headings].join(
+          ' ',
+        ),
       );
 
       return tokens.every((token) => searchableText.includes(token));
@@ -128,7 +127,9 @@ export function SearchOverlay({ onDismiss, posts }: SearchOverlayProps) {
         </div>
 
         <p aria-live='polite' className='sr-only'>
-          {query.trim() ? `${results.length}개 검색 결과` : '검색어 입력 대기 중'}
+          {query.trim()
+            ? `${results.length}개 검색 결과`
+            : '검색어 입력 대기 중'}
         </p>
 
         {hasResults ? (
@@ -138,6 +139,7 @@ export function SearchOverlay({ onDismiss, posts }: SearchOverlayProps) {
                 <Link
                   href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}
                   onClick={onDismiss}
+                  transitionTypes={['article-forward']}
                 >
                   <span>{post.tags[0] ?? 'Article'}</span>
                   <h2>

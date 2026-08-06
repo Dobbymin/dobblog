@@ -6,10 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { MobileNav, SearchOverlay, ThemeToggle } from '@/components';
 import { Button } from '@/components/ui';
-import {
-  EXTERNAL_ROUTES_PATH,
-  ROUTES_PATH,
-} from '@/constants';
+import { EXTERNAL_ROUTES_PATH, ROUTES_PATH } from '@/constants';
 import type { PostMetadata } from '@/lib/posts';
 import { Rss, Search } from 'lucide-react';
 
@@ -21,13 +18,27 @@ type HeaderClientProps = {
 export const HeaderClient = ({ searchPosts, variant }: HeaderClientProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const searchTriggerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (variant === 'default') return;
+    if (variant !== 'home') return;
 
-    const updateScrollState = () => setIsScrolled(window.scrollY > 24);
-    const animationFrame = window.requestAnimationFrame(updateScrollState);
+    let animationFrame = 0;
+    const updateScrollState = () => {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = window.requestAnimationFrame(() => {
+        const scrollPosition = window.scrollY;
+        const headerOffset = Math.max(0, 32 - scrollPosition);
+        headerRef.current?.style.setProperty(
+          '--home-header-offset',
+          `${headerOffset}px`,
+        );
+        setIsScrolled(scrollPosition > 300);
+      });
+    };
+
+    updateScrollState();
     window.addEventListener('scroll', updateScrollState, { passive: true });
     return () => {
       window.cancelAnimationFrame(animationFrame);
@@ -49,12 +60,16 @@ export const HeaderClient = ({ searchPosts, variant }: HeaderClientProps) => {
     <>
       <header
         className={`site-header ${variant === 'home' ? 'home-site-header' : ''} ${variant === 'article' ? 'article-site-header' : ''} ${isScrolled ? 'is-scrolled' : ''}`}
+        ref={headerRef}
       >
         <div className='site-shell site-header-inner'>
           <Link
             aria-label='dobbymin 개발 블로그 홈'
             className='wordmark'
             href={ROUTES_PATH.HOME}
+            transitionTypes={
+              variant === 'article' ? ['article-back'] : undefined
+            }
           >
             dobbymin<span>’s</span>
           </Link>
@@ -70,60 +85,30 @@ export const HeaderClient = ({ searchPosts, variant }: HeaderClientProps) => {
             </a>
           </nav>
           <div className='header-actions'>
-            {variant === 'article' ? (
-              <>
-                <Button
-                  aria-label='글 검색'
-                  className='icon-button'
-                  onClick={openSearch}
-                  size='icon'
-                  type='button'
-                  variant='ghost'
-                >
-                  <Search size={20} strokeWidth={2} />
-                </Button>
-                <ThemeToggle />
-                <a
-                  aria-label='RSS feed'
-                  className='icon-button'
-                  href={ROUTES_PATH.RSS}
-                >
-                  <Rss size={20} strokeWidth={2} />
-                </a>
-              </>
-            ) : (
-              <>
-                <div className='header-utility'>
-                  <Button
-                    aria-label='글 검색'
-                    className='icon-button'
-                    onClick={openSearch}
-                    size='icon'
-                    type='button'
-                    variant='ghost'
-                  >
-                    <Search size={18} strokeWidth={2.25} />
-                  </Button>
-                  <a
-                    aria-label='RSS feed'
-                    className='icon-button'
-                    href={ROUTES_PATH.RSS}
-                  >
-                    <Rss size={18} strokeWidth={2.25} />
-                  </a>
-                </div>
-                <ThemeToggle />
-              </>
-            )}
-            <MobileNav onSearch={openSearch} />
+            <Button
+              aria-label='글 검색'
+              className='icon-button'
+              onClick={openSearch}
+              size='icon'
+              type='button'
+              variant='ghost'
+            >
+              <Search className='size-5' size={20} strokeWidth={2} />
+            </Button>
+            <ThemeToggle />
+            <a
+              aria-label='RSS feed'
+              className='icon-button rss-button'
+              href={ROUTES_PATH.RSS}
+            >
+              <Rss className='size-5' size={20} strokeWidth={2} />
+            </a>
+            <MobileNav />
           </div>
         </div>
       </header>
       {isSearchOpen && (
-        <SearchOverlay
-          onDismiss={closeSearch}
-          posts={searchPosts}
-        />
+        <SearchOverlay onDismiss={closeSearch} posts={searchPosts} />
       )}
     </>
   );

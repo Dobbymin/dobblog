@@ -5,23 +5,21 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui';
-import {
-  EXTERNAL_ROUTES_PATH,
-  ROUTES_PATH,
-} from '@/constants';
+import { EXTERNAL_ROUTES_PATH, ROUTES_PATH } from '@/constants';
 import { Menu, X } from 'lucide-react';
 
 const focusableSelector =
   'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-type MobileNavProps = {
-  onSearch: () => void;
-};
-
-export function MobileNav({ onSearch }: MobileNavProps) {
+export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  const closeMenu = () => {
+    setIsOpen(false);
+    window.requestAnimationFrame(() => menuButtonRef.current?.focus());
+  };
 
   useEffect(() => {
     if (!isOpen) return;
@@ -31,7 +29,7 @@ export function MobileNav({ onSearch }: MobileNavProps) {
     firstFocusable?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsOpen(false);
+      if (event.key === 'Escape') closeMenu();
       if (event.key !== 'Tab' || !dialogRef.current) return;
 
       const elements = Array.from(
@@ -67,13 +65,10 @@ export function MobileNav({ onSearch }: MobileNavProps) {
         type='button'
         variant='ghost'
       >
-        <Menu size={21} />
+        <Menu className='size-5' size={20} />
       </Button>
       {isOpen && (
-        <div
-          className='mobile-nav-overlay'
-          onMouseDown={() => setIsOpen(false)}
-        >
+        <div className='mobile-nav-overlay' onMouseDown={closeMenu}>
           <div
             aria-label='모바일 내비게이션'
             aria-modal='true'
@@ -88,26 +83,19 @@ export function MobileNav({ onSearch }: MobileNavProps) {
               <Button
                 aria-label='메뉴 닫기'
                 className='icon-button'
-                onClick={() => setIsOpen(false)}
+                onClick={closeMenu}
                 size='icon'
                 type='button'
                 variant='ghost'
               >
-                <X size={21} />
+                <X className='size-5' size={20} />
               </Button>
             </div>
             <nav>
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  menuButtonRef.current?.focus();
-                  onSearch();
-                }}
-                type='button'
+              <Link
+                href={ROUTES_PATH.ARTICLES}
+                onClick={() => setIsOpen(false)}
               >
-                Search
-              </button>
-              <Link href={ROUTES_PATH.ARTICLES} onClick={() => setIsOpen(false)}>
                 Articles
               </Link>
               <Link href={ROUTES_PATH.ABOUT} onClick={() => setIsOpen(false)}>

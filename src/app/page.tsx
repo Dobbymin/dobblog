@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { Cloud } from '@/components';
+import { Cloud, PageTransition } from '@/components';
 import { Separator } from '@/components/ui';
 import { DYNAMIC_ROUTES_PATH } from '@/constants';
 import { Footer, Header } from '@/layout';
@@ -9,73 +9,82 @@ import { ArrowRight } from 'lucide-react';
 
 export default function Home() {
   return (
-    <>
-      <Header variant='home' />
-      <main className='clone-home'>
-        <section className='clone-home-sky'>
-          <Cloud height='536px' variant='home' viewBoxHeight={536} />
-        </section>
-        <div className='site-shell clone-home-grid'>
-          <section className='home-newest'>
-            <h1>Articles and Tutorials</h1>
-            {posts.map((post, index) => (
-              <article className='home-article' key={post.slug}>
-                <Link href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}>
-                  <h2>{post.title}</h2>
-                </Link>
-                <p>{post.description}</p>
-                <Link
-                  className='read-more'
-                  href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}
-                >
-                  Read more <ArrowRight size={18} />
-                </Link>
-                {index < posts.length - 1 && (
-                  <Separator className='home-article-separator' />
-                )}
-              </article>
-            ))}
+    <PageTransition>
+      <div className='route-transition-page'>
+        <Header variant='home' />
+        <main className='clone-home'>
+          <section className='clone-home-sky'>
+            <Cloud height='536px' variant='home' viewBoxHeight={536} />
           </section>
-          <aside className='home-aside'>
-            <section className='home-categories'>
-              <h2>Browse By Category</h2>
-              <div>
-                {[
-                  ['AI', 'AI'],
-                  ['Terminal', 'Terminal'],
-                  ['Workflow', 'Workflow'],
-                  ['CLI', 'CLI'],
-                  ['Investment', '투자'],
-                  ['Automation', '자동매매'],
-                ].map(([label, tag]) => (
+          <div className='site-shell clone-home-grid'>
+            <section className='home-newest'>
+              <h1>Articles and Tutorials</h1>
+              {posts.map((post, index) => (
+                <article className='home-article' key={post.slug}>
                   <Link
-                    href={DYNAMIC_ROUTES_PATH.ARTICLES({ tag })}
-                    key={tag}
+                    href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}
+                    transitionTypes={['article-forward']}
                   >
-                    {label}
+                    <h2>{post.title}</h2>
                   </Link>
-                ))}
-              </div>
+                  <p>{post.description}</p>
+                  <Link
+                    className='read-more'
+                    href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}
+                    transitionTypes={['article-forward']}
+                  >
+                    Read more <ArrowRight size={18} />
+                  </Link>
+                  {index < posts.length - 1 && (
+                    <Separator className='home-article-separator' />
+                  )}
+                </article>
+              ))}
             </section>
-            <section className='home-popular'>
-              <h2>Popular Content</h2>
-              <ol>
-                {posts
-                  .slice(4)
-                  .concat(posts.slice(0, 3))
-                  .map((post) => (
-                    <li key={post.slug}>
-                      <Link href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}>
-                        {post.title}
-                      </Link>
-                    </li>
+            <aside className='home-aside'>
+              <section className='home-categories'>
+                <h2>Browse By Category</h2>
+                <div>
+                  {[
+                    ['AI', 'AI'],
+                    ['Terminal', 'Terminal'],
+                    ['Workflow', 'Workflow'],
+                    ['CLI', 'CLI'],
+                    ['Investment', '투자'],
+                    ['Automation', '자동매매'],
+                  ].map(([label, tag]) => (
+                    <Link
+                      href={DYNAMIC_ROUTES_PATH.ARTICLES({ tag })}
+                      key={tag}
+                    >
+                      {label}
+                    </Link>
                   ))}
-              </ol>
-            </section>
-          </aside>
-        </div>
-      </main>
-      <Footer />
-    </>
+                </div>
+              </section>
+              <section className='home-popular'>
+                <h2>Popular Content</h2>
+                <ol>
+                  {posts
+                    .slice(4)
+                    .concat(posts.slice(0, 3))
+                    .map((post) => (
+                      <li key={post.slug}>
+                        <Link
+                          href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}
+                          transitionTypes={['article-forward']}
+                        >
+                          {post.title}
+                        </Link>
+                      </li>
+                    ))}
+                </ol>
+              </section>
+            </aside>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    </PageTransition>
   );
 }

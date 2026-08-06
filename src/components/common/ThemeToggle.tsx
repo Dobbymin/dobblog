@@ -1,8 +1,7 @@
 'use client';
 
-import { SunMoon } from 'lucide-react';
-
 import { Button } from '@/components/ui';
+import { SunMoon } from 'lucide-react';
 
 const storageKey = 'dobbymin-color-theme';
 
@@ -24,7 +23,7 @@ export function ThemeToggle() {
       type='button'
       variant='ghost'
     >
-      <SunMoon size={18} strokeWidth={2.25} />
+      <SunMoon className='size-5' size={20} strokeWidth={2} />
     </Button>
   );
 }
