@@ -1337,18 +1337,12 @@ a:focus-visible {
   margin: 0;
   padding: 0;
 }
-.home-popular li {
-  border-bottom: 1px solid var(--line);
-}
-.home-popular li:first-child {
-  border-top: 1px solid var(--line);
-}
 .home-popular a {
   display: block;
   font-size: 0.94rem;
   font-weight: 650;
   line-height: 1.32;
-  padding: 14px 0;
+  padding: 10px 0;
   transition:
     color 180ms ease,
     padding 180ms ease;

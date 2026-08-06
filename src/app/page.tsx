@@ -31,21 +31,18 @@ export default function Home() {
                 </div>
               </section>
               <section className='home-popular'>
-                <h2>Popular Content</h2>
+                <h2>Recent Content</h2>
                 <ol>
-                  {posts
-                    .slice(4)
-                    .concat(posts.slice(0, 3))
-                    .map((post) => (
-                      <li key={post.slug}>
-                        <Link
-                          href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}
-                          transitionTypes={['article-forward']}
-                        >
-                          {post.title}
-                        </Link>
-                      </li>
-                    ))}
+                  {posts.slice(0, 10).map((post) => (
+                    <li key={post.slug}>
+                      <Link
+                        href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}
+                        transitionTypes={['article-forward']}
+                      >
+                        {post.title}
+                      </Link>
+                    </li>
+                  ))}
                 </ol>
               </section>
             </aside>
