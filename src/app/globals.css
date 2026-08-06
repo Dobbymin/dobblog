@@ -2,6 +2,14 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
+@font-face {
+  font-display: swap;
+  font-family: 'Wotfard';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/wotfard-regular-webfont.woff2') format('woff2');
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -91,6 +99,7 @@ a:focus-visible {
 .site-header {
   background: color-mix(in srgb, var(--background) 97%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--line) 65%, transparent);
+  font-family: 'Wotfard', var(--font-geist-sans), var(--font-sans);
   position: sticky;
   top: 0;
   view-transition-name: site-header;
@@ -103,10 +112,10 @@ a:focus-visible {
   justify-content: space-between;
 }
 .wordmark {
-  font-family: var(--font-mono);
-  font-size: 1.08rem;
-  font-weight: 700;
-  letter-spacing: -0.07em;
+  font-family: var(--font-geist-sans), var(--font-sans);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 .wordmark span {
   color: var(--accent);
@@ -116,6 +125,7 @@ a:focus-visible {
 .desktop-nav {
   align-items: center;
   display: flex;
+  font-family: 'Wotfard', var(--font-geist-sans), var(--font-sans);
   gap: 30px;
   margin-left: auto;
   margin-right: 26px;
@@ -185,6 +195,7 @@ a:focus-visible {
   background: var(--background);
   color: var(--foreground);
   display: flex;
+  font-family: var(--font-sans);
   height: 272px;
   left: 0;
   padding-top: 64px;
@@ -244,7 +255,7 @@ a:focus-visible {
   border-radius: 0;
   box-shadow: none;
   color: var(--foreground);
-  font-family: var(--font-sans);
+  font-family: inherit;
   font-size: 1.125rem;
   height: 40px;
   line-height: 1.5;
@@ -1029,12 +1040,13 @@ a:focus-visible {
 .mobile-nav-topline {
   align-items: center;
   display: flex;
-  font-family: var(--font-mono);
+  font-family: var(--font-geist-sans), var(--font-sans);
   font-weight: 700;
   justify-content: space-between;
 }
 .mobile-nav-dialog nav {
   display: grid;
+  font-family: 'Wotfard', var(--font-geist-sans), var(--font-sans);
   margin-top: 56px;
 }
 .mobile-nav-dialog nav a,
@@ -1087,10 +1099,10 @@ a:focus-visible {
 .article-site-header .wordmark,
 .about-site-header .wordmark {
   color: var(--accent);
-  font-family: var(--font-sans);
+  font-family: var(--font-geist-sans), var(--font-sans);
   font-size: 1.5rem;
   font-weight: 700;
-  letter-spacing: -0.06em;
+  letter-spacing: -0.025em;
 }
 .home-site-header .wordmark span,
 .article-site-header .wordmark span,
@@ -1179,6 +1191,7 @@ a:focus-visible {
 .home-newest > h1,
 .home-aside h2 {
   color: hsl(334deg 82% 52%);
+  font-family: 'Wotfard', var(--font-geist-sans), var(--font-sans);
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.125em;
