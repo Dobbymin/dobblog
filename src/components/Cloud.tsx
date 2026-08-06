@@ -4,88 +4,99 @@ type CloudLayer = {
 
 type CloudProps = {
   height?: string;
+  viewBoxHeight?: number;
   ariaHidden?: boolean;
   layers?: [CloudLayer, CloudLayer, CloudLayer];
-  scaleY?: number;
 };
 
-type CloudPathLayer = CloudLayer & {
+type CloudEllipseLayer = CloudLayer & {
+  baseY: number;
   start: number;
   gaps: number[];
-  ys: number[];
+  sizes: [number, number][];
+  rectHeight: number;
 };
 
-function buildPath(pts: [number, number][], vbH: number): string {
-  let d = `M ${pts[0][0]} ${pts[0][1]}`;
-  for (let i = 1; i < pts.length; i++) {
-    const [x0, y0] = pts[i - 1];
-    const [x1, y1] = pts[i];
-    const s = x1 - x0;
-    // Descending control points: [0.66, 0.80].
-    const [r1, r2] = y1 > y0 ? [0.66, 0.8] : [0.14, 0.32];
-    d += ` C ${x0 + s * r1} ${y0} ${x0 + s * r2} ${y1} ${x1} ${y1}`;
-  }
-  const lastX = pts[pts.length - 1][0];
-  const firstX = pts[0][0];
-  d += ` L ${lastX} ${vbH} L ${firstX} ${vbH} Z`;
-  return d;
-}
-
-function mk(start: number, gaps: number[], ys: number[]): [number, number][] {
-  const pts: [number, number][] = [];
-  let x = start;
-  for (let i = 0; i < ys.length; i++) {
-    pts.push([x, ys[i]]);
-    x += gaps[i % gaps.length];
-  }
-  return pts;
-}
-
-const defaultLayers: CloudPathLayer[] = [
+const defaultLayers: CloudEllipseLayer[] = [
   {
     color: 'var(--color-cloud-500)',
-    start: -120,
-    gaps: [
-      268, 196, 241, 175, 254, 208, 231, 186, 262, 149, 238, 203, 177, 249, 164,
-      226,
+    baseY: 250,
+    start: -180,
+    gaps: [268, 196, 242, 178, 255, 210, 232],
+    sizes: [
+      [185, 161],
+      [122, 106],
+      [168, 146],
+      [140, 122],
+      [196, 170],
+      [112, 98],
+      [176, 153],
+      [132, 115],
+      [190, 165],
+      [118, 103],
+      [162, 141],
+      [146, 127],
+      [182, 158],
+      [126, 110],
     ],
-    ys: [
-      148, 62, 132, 78, 155, 55, 140, 88, 126, 68, 158, 72, 135, 58, 146, 84,
-      130, 66, 152, 74, 138, 60, 144, 80, 128, 70, 150, 64,
-    ],
+    rectHeight: 107,
   },
   {
     color: 'var(--color-cloud-300)',
+    baseY: 302,
     start: -180,
-    gaps: [
-      225, 262, 188, 247, 206, 271, 164, 238, 215, 253, 179, 244, 197, 230, 168,
-      258,
+    gaps: [232, 278, 204, 256, 222, 290, 238],
+    sizes: [
+      [172, 150],
+      [201, 175],
+      [138, 120],
+      [186, 162],
+      [152, 132],
+      [212, 184],
+      [144, 125],
+      [178, 155],
+      [164, 143],
+      [196, 171],
+      [130, 113],
+      [190, 165],
+      [156, 136],
+      [206, 179],
     ],
-    ys: [
-      222, 140, 238, 158, 215, 128, 232, 165, 208, 145, 242, 152, 218, 134, 235,
-      160, 225, 148, 240, 155, 212, 138, 228, 168, 220, 142, 236, 150,
-    ],
+    rectHeight: 55,
   },
   {
     color: 'var(--color-background)',
-    start: -90,
-    gaps: [
-      248, 192, 265, 171, 239, 257, 183, 244, 212, 268, 158, 235, 201, 251, 176,
-      229,
+    baseY: 362,
+    start: -180,
+    gaps: [258, 306, 222, 282, 240, 318, 266],
+    sizes: [
+      [230, 200],
+      [158, 138],
+      [212, 184],
+      [176, 153],
+      [244, 212],
+      [148, 129],
+      [220, 191],
+      [190, 165],
+      [166, 144],
+      [236, 205],
+      [142, 124],
+      [204, 177],
+      [182, 158],
+      [226, 196],
     ],
-    ys: [
-      305, 225, 318, 242, 298, 215, 312, 248, 302, 232, 322, 238, 295, 220, 315,
-      245, 308, 228, 320, 235, 300, 218, 310, 250, 304, 224, 316, 240,
-    ],
+    rectHeight: 195,
   },
 ];
 
 export const Cloud = ({
   height = '357px',
+  viewBoxHeight = 357,
   ariaHidden = true,
   layers,
-  scaleY = 1,
 }: CloudProps) => {
+  const verticalScale = viewBoxHeight / 357;
+
   return (
     <section
       aria-hidden={ariaHidden}
@@ -100,31 +111,48 @@ export const Cloud = ({
       }}
     >
       <svg
-        viewBox='0 0 5120 357'
+        viewBox={`0 0 2000 ${viewBoxHeight}`}
         preserveAspectRatio='none'
         aria-hidden={ariaHidden}
         style={{
-          width: 'min(5120px, 670vw)',
-          minWidth: 'min(5120px, 670vw)',
+          width: 'max(100%, min(2000px, 500vw))',
+          minWidth: 'min(2000px, 500vw)',
           height: '100%',
           display: 'block',
           flex: 'none',
         }}
       >
-        {defaultLayers.map(({ color, gaps, start, ys }, index) => (
-          <path
-            key={color}
-            d={buildPath(
-              mk(
-                start,
-                gaps,
-                ys.map((y) => y * scaleY),
-              ),
-              357,
-            )}
-            fill={layers?.[index]?.color ?? color}
-          />
-        ))}
+        {defaultLayers.map(
+          ({ baseY, color, gaps, rectHeight, sizes, start }, index) => {
+            let cx = start;
+            const fill = layers?.[index]?.color ?? color;
+
+            return (
+              <g key={color} fill={fill}>
+                {sizes.map(([rx, ry], ellipseIndex) => {
+                  const currentCx = cx;
+                  cx += gaps[ellipseIndex % gaps.length];
+
+                  return (
+                    <ellipse
+                      key={`${currentCx}-${rx}-${ry}`}
+                      cx={currentCx}
+                      cy={baseY * verticalScale}
+                      rx={rx}
+                      ry={ry * verticalScale}
+                    />
+                  );
+                })}
+                <rect
+                  x={-180}
+                  y={baseY * verticalScale}
+                  width={2360}
+                  height={rectHeight}
+                />
+              </g>
+            );
+          },
+        )}
       </svg>
     </section>
   );

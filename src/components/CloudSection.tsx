@@ -11,7 +11,7 @@ export const CloudSection = ({
     <div style={{ marginBottom: '-1px' }}>
       <Cloud
         height='337px'
-        scaleY={337 / 357}
+        viewBoxHeight={337}
         layers={[
           {
             color: 'var(--color-cloud-500)',

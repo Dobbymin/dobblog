@@ -24,3 +24,4 @@
 | 2026-08-05 | 레시피에 "치명적 함정 5"(레이어 바닥 고정 금지) + 지시 시 레이아웃 컨텍스트 동봉 원칙 추가 | cloud-css-recipes.md, skills/blog-clone-build | height 조건 누락으로 구현자가 bottom:0을 써서 세 레이어 바닥이 한 점에 모여 층이 사라짐 |
 | 2026-08-06 | 구름을 CSS gradient → 인라인 SVG 타원 겹치기로 전환 (기법 S 신설, CSS 타일링은 대안으로 강등) | cloud-css-recipes.md, src/components/Cloud.tsx | radial-gradient는 균일 타원만 그려 벽지처럼 보임. 사용자가 원본이 SVG임을 확인하고 SVG 채택 |
 | 2026-08-06 | 기법 S를 참조 사이트 실측 기법으로 재작성 (`min(5120px,670vw)` 반응형 + 방향 기반 제어점 비대칭) + 함정 S1~S3 | cloud-css-recipes.md, src/components/Cloud.tsx | 타원 겹치기는 원본과 형태가 달랐음. 원본 실측 결과 고정폭 전략과 제어점 규칙(0.66/0.80 ↔ 0.14/0.32)을 확인해 재현 |
+| 2026-08-06 | 타원 덩어리 겹치기로 환원 + `max(100%, min(2000px,500vw))` 반응형. 베지어는 기법 B(미채택)로 보존 | cloud-css-recipes.md, src/components/Cloud.tsx, CloudSection.tsx | 베지어는 모바일 압축을 피하려 y 편차를 줄이면 완만한 물결이 되어 구름다움을 잃음(상충). CloudSection 이중 축소 버그도 동시 수정 |
