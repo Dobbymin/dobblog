@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 
 import { useState } from 'react';
 
+import { DYNAMIC_ROUTES_PATH, ROUTES_PATH } from '@/constants';
 import type { PostMetadata } from '@/lib/posts';
 import { Search, X } from 'lucide-react';
 
@@ -37,7 +38,7 @@ export function ArticleExplorer({ posts }: ArticleExplorerProps) {
   return (
     <div className='article-explorer'>
       <form
-        action='/articles'
+        action={ROUTES_PATH.ARTICLES}
         className='article-search'
         method='get'
         role='search'
@@ -57,8 +58,8 @@ export function ArticleExplorer({ posts }: ArticleExplorerProps) {
             className='search-clear'
             href={
               activeTag
-                ? `/articles?tag=${encodeURIComponent(activeTag)}`
-                : '/articles'
+                ? DYNAMIC_ROUTES_PATH.ARTICLES({ tag: activeTag })
+                : ROUTES_PATH.ARTICLES
             }
           >
             <X size={16} />
@@ -69,19 +70,18 @@ export function ArticleExplorer({ posts }: ArticleExplorerProps) {
         <Link
           className={!activeTag ? 'is-active' : undefined}
           href={
-            query ? `/articles?q=${encodeURIComponent(query)}` : '/articles'
+            query
+              ? DYNAMIC_ROUTES_PATH.ARTICLES({ q: query })
+              : ROUTES_PATH.ARTICLES
           }
         >
           All
         </Link>
         {tags.map((tag) => {
-          const params = new URLSearchParams();
-          if (query) params.set('q', query);
-          params.set('tag', tag);
           return (
             <Link
               className={activeTag === tag ? 'is-active' : undefined}
-              href={`/articles?${params.toString()}`}
+              href={DYNAMIC_ROUTES_PATH.ARTICLES({ q: query, tag })}
               key={tag}
             >
               {tag}
@@ -101,7 +101,7 @@ export function ArticleExplorer({ posts }: ArticleExplorerProps) {
       ) : (
         <div className='empty-search'>
           <p>조건에 맞는 글이 없습니다.</p>
-          <Link href='/articles'>전체 글 보기</Link>
+          <Link href={ROUTES_PATH.ARTICLES}>전체 글 보기</Link>
         </div>
       )}
     </div>

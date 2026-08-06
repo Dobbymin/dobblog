@@ -1,3 +1,4 @@
+import { DYNAMIC_ROUTES_PATH, ROUTES_PATH, SITE_URL } from '@/constants';
 import { posts } from '@/lib/posts';
 
 export const dynamic = 'force-static';
@@ -21,8 +22,8 @@ export function GET() {
       (post) => `
     <item>
       <title>${escapeXml(post.title)}</title>
-      <link>https://dobbymin.github.io/articles/${post.slug}</link>
-      <guid>https://dobbymin.github.io/articles/${post.slug}</guid>
+      <link>${SITE_URL}${DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}</link>
+      <guid>${SITE_URL}${DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}</guid>
       <description>${escapeXml(post.description)}</description>
       <pubDate>${new Date(`${post.date}T00:00:00+09:00`).toUTCString()}</pubDate>
     </item>`,
@@ -34,7 +35,7 @@ export function GET() {
     <rss version="2.0">
       <channel>
         <title>dobbymin’s 개발 블로그</title>
-        <link>https://dobbymin.github.io</link>
+        <link>${SITE_URL}${ROUTES_PATH.HOME}</link>
         <description>개발 경험을 기록합니다.</description>${items}
       </channel>
     </rss>`,

@@ -1,18 +1,23 @@
 import type { MetadataRoute } from 'next';
 
+import { DYNAMIC_ROUTES_PATH, ROUTES_PATH, SITE_URL } from '@/constants';
 import { posts } from '@/lib/posts';
-
-const baseUrl = 'https://dobbymin.github.io';
 
 export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    { url: baseUrl, lastModified: new Date('2026-08-06') },
-    { url: `${baseUrl}/articles`, lastModified: new Date('2026-08-06') },
-    { url: `${baseUrl}/about`, lastModified: new Date('2026-08-06') },
+    { url: `${SITE_URL}${ROUTES_PATH.HOME}`, lastModified: new Date('2026-08-06') },
+    {
+      url: `${SITE_URL}${ROUTES_PATH.ARTICLES}`,
+      lastModified: new Date('2026-08-06'),
+    },
+    {
+      url: `${SITE_URL}${ROUTES_PATH.ABOUT}`,
+      lastModified: new Date('2026-08-06'),
+    },
     ...posts.map((post) => ({
-      url: `${baseUrl}/articles/${post.slug}`,
+      url: `${SITE_URL}${DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}`,
       lastModified: new Date(post.date),
     })),
   ];

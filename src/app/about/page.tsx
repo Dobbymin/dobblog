@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import { EXTERNAL_ROUTES_PATH } from '@/constants';
 import { Footer, Header } from '@/layout';
 import { ArrowUpRight, Code2 } from 'lucide-react';
 
@@ -25,14 +26,14 @@ export default function AboutPage() {
         </p>
         <div className='about-links'>
           <a
-            href='https://github.com/dobbymin'
+            href={EXTERNAL_ROUTES_PATH.GITHUB}
             rel='noreferrer'
             target='_blank'
           >
             <Code2 size={19} /> GitHub <ArrowUpRight size={16} />
           </a>
           <a
-            href='https://wiki.dobbymin.cloud/'
+            href={EXTERNAL_ROUTES_PATH.WIKI}
             rel='noreferrer'
             target='_blank'
           >

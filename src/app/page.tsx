@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { Cloud } from '@/components';
+import { DYNAMIC_ROUTES_PATH } from '@/constants';
 import { Footer, Header } from '@/layout';
 import { posts } from '@/lib/posts';
 import { ArrowRight } from 'lucide-react';
@@ -18,11 +19,14 @@ export default function Home() {
             <h1>Articles and Tutorials</h1>
             {posts.map((post, index) => (
               <article className='home-article' key={post.slug}>
-                <Link href={`/articles/${post.slug}`}>
+                <Link href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}>
                   <h2>{post.title}</h2>
                 </Link>
                 <p>{post.description}</p>
-                <Link className='read-more' href={`/articles/${post.slug}`}>
+                <Link
+                  className='read-more'
+                  href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}
+                >
                   Read more <ArrowRight size={18} />
                 </Link>
                 {index < posts.length - 1 && <hr />}
@@ -42,7 +46,7 @@ export default function Home() {
                   ['Automation', '자동매매'],
                 ].map(([label, tag]) => (
                   <Link
-                    href={`/articles?tag=${encodeURIComponent(tag)}`}
+                    href={DYNAMIC_ROUTES_PATH.ARTICLES({ tag })}
                     key={tag}
                   >
                     {label}
@@ -58,7 +62,9 @@ export default function Home() {
                   .concat(posts.slice(0, 3))
                   .map((post) => (
                     <li key={post.slug}>
-                      <Link href={`/articles/${post.slug}`}>{post.title}</Link>
+                      <Link href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}>
+                        {post.title}
+                      </Link>
                     </li>
                   ))}
               </ol>

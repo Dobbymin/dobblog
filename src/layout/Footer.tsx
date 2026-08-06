@@ -1,6 +1,11 @@
 import Link from 'next/link';
 
 import { CloudSection } from '@/components';
+import {
+  DYNAMIC_ROUTES_PATH,
+  EXTERNAL_ROUTES_PATH,
+  ROUTES_PATH,
+} from '@/constants';
 import { Code2, Rss } from 'lucide-react';
 
 export const Footer = () => {
@@ -10,7 +15,7 @@ export const Footer = () => {
       <div className='footer-content'>
         <div className='site-shell footer-grid'>
           <div>
-            <Link className='wordmark' href='/'>
+            <Link className='wordmark' href={ROUTES_PATH.HOME}>
               dobbymin<span>’s</span>
             </Link>
             <p>개발 경험을 기록합니다.</p>
@@ -19,16 +24,28 @@ export const Footer = () => {
             <h2>Browse By Category</h2>
             <ul>
               <li>
-                <Link href='/articles?tag=AI'>AI</Link>
+                <Link href={DYNAMIC_ROUTES_PATH.ARTICLES({ tag: 'AI' })}>
+                  AI
+                </Link>
               </li>
               <li>
-                <Link href='/articles?tag=Terminal'>Terminal</Link>
+                <Link
+                  href={DYNAMIC_ROUTES_PATH.ARTICLES({ tag: 'Terminal' })}
+                >
+                  Terminal
+                </Link>
               </li>
               <li>
-                <Link href='/articles?tag=Workflow'>Workflow</Link>
+                <Link
+                  href={DYNAMIC_ROUTES_PATH.ARTICLES({ tag: 'Workflow' })}
+                >
+                  Workflow
+                </Link>
               </li>
               <li>
-                <Link href='/articles?tag=CLI'>CLI</Link>
+                <Link href={DYNAMIC_ROUTES_PATH.ARTICLES({ tag: 'CLI' })}>
+                  CLI
+                </Link>
               </li>
             </ul>
           </div>
@@ -36,14 +53,14 @@ export const Footer = () => {
             <h2>Explore</h2>
             <ul>
               <li>
-                <Link href='/articles'>Articles</Link>
+                <Link href={ROUTES_PATH.ARTICLES}>Articles</Link>
               </li>
               <li>
-                <Link href='/about'>About</Link>
+                <Link href={ROUTES_PATH.ABOUT}>About</Link>
               </li>
               <li>
                 <a
-                  href='https://wiki.dobbymin.cloud/'
+                  href={EXTERNAL_ROUTES_PATH.WIKI}
                   rel='noreferrer'
                   target='_blank'
                 >
@@ -57,13 +74,13 @@ export const Footer = () => {
             <div className='footer-icons'>
               <a
                 aria-label='GitHub'
-                href='https://github.com/dobbymin'
+                href={EXTERNAL_ROUTES_PATH.GITHUB}
                 rel='noreferrer'
                 target='_blank'
               >
                 <Code2 size={20} />
               </a>
-              <a aria-label='RSS feed' href='/rss.xml'>
+              <a aria-label='RSS feed' href={ROUTES_PATH.RSS}>
                 <Rss size={20} />
               </a>
             </div>

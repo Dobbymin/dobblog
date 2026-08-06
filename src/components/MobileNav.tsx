@@ -4,6 +4,10 @@ import Link from 'next/link';
 
 import { useEffect, useRef, useState } from 'react';
 
+import {
+  EXTERNAL_ROUTES_PATH,
+  ROUTES_PATH,
+} from '@/constants';
 import { Menu, X } from 'lucide-react';
 
 const focusableSelector =
@@ -82,21 +86,21 @@ export function MobileNav() {
               </button>
             </div>
             <nav>
-              <Link href='/articles' onClick={() => setIsOpen(false)}>
+              <Link href={ROUTES_PATH.ARTICLES} onClick={() => setIsOpen(false)}>
                 Articles
               </Link>
-              <Link href='/about' onClick={() => setIsOpen(false)}>
+              <Link href={ROUTES_PATH.ABOUT} onClick={() => setIsOpen(false)}>
                 About
               </Link>
               <a
-                href='https://github.com/dobbymin'
+                href={EXTERNAL_ROUTES_PATH.GITHUB}
                 rel='noreferrer'
                 target='_blank'
               >
                 GitHub
               </a>
               <a
-                href='https://wiki.dobbymin.cloud/'
+                href={EXTERNAL_ROUTES_PATH.WIKI}
                 rel='noreferrer'
                 target='_blank'
               >

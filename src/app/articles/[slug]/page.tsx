@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { ArticleToc } from '@/components';
+import { DYNAMIC_ROUTES_PATH, ROUTES_PATH } from '@/constants';
 import { Footer, Header } from '@/layout';
 import { formatDate, getPost, posts } from '@/lib/posts';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -43,7 +44,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <Header />
       <main className='site-shell article-page'>
         <header className='article-header'>
-          <Link className='back-link' href='/articles'>
+          <Link className='back-link' href={ROUTES_PATH.ARTICLES}>
             <ArrowLeft size={16} /> Articles
           </Link>
           <div className='post-card-meta'>
@@ -66,7 +67,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </div>
         <nav aria-label='글 탐색' className='article-pagination'>
           {previousPost ? (
-            <Link href={`/articles/${previousPost.slug}`}>
+            <Link href={DYNAMIC_ROUTES_PATH.ARTICLE(previousPost.slug)}>
               <ArrowLeft size={17} />
               <span>
                 이전 글<strong>{previousPost.title}</strong>
@@ -78,7 +79,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           {nextPost ? (
             <Link
               className='next-article-link'
-              href={`/articles/${nextPost.slug}`}
+              href={DYNAMIC_ROUTES_PATH.ARTICLE(nextPost.slug)}
             >
               <span>
                 다음 글<strong>{nextPost.title}</strong>

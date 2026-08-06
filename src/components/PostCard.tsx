@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { DYNAMIC_ROUTES_PATH } from '@/constants';
 import { type PostMetadata, formatDate } from '@/lib/posts';
 import { ArrowUpRight } from 'lucide-react';
 
@@ -16,7 +17,7 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
         <span>{post.readingTime}</span>
       </div>
       <h3>
-        <Link href={`/articles/${post.slug}`}>
+        <Link href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}>
           {post.title}
           <ArrowUpRight aria-hidden='true' size={18} strokeWidth={2.25} />
         </Link>
