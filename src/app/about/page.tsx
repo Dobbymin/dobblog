@@ -74,8 +74,8 @@ export default function AboutPage() {
             <Cloud
               height='357px'
               layers={[
-                { color: 'hsl(210deg 10% 24%)' },
-                { color: 'hsl(210deg 12% 16%)' },
+                { color: 'var(--about-cloud-back)' },
+                { color: 'var(--about-cloud-middle)' },
                 { color: 'var(--background)' },
               ]}
             />

@@ -7,3 +7,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+# Skill policy
+
+- For every non-UI feature implementation, load and apply the `ponytail` skill before changing code.
+- UI-only styling and layout work is exempt. State, event, data-flow, routing, and other behavior changes are not UI-only.
+- If `ponytail` is unavailable, install it from `https://github.com/DietrichGebert/ponytail` before proceeding.
