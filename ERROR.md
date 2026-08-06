@@ -1,5 +1,24 @@
 # 작업 오류 기록
 
+## 2026-08-06 — GitHub Pages 배포 API 경로 추정
+
+### 발생한 오류
+
+- Pages 배포 상태를 확인하면서 존재 여부를 확인하지 않은 `/repos/{owner}/{repo}/pages/deployments` 엔드포인트를 호출해 404가 발생했다.
+- 실행 중인 Actions job의 원인을 확인하려고 job logs 엔드포인트를 호출했지만, 완료 전에는 로그 archive가 제공되지 않아 404가 발생했다.
+
+### 원인
+
+- GitHub Pages 설정 API와 Deployments API를 하나의 Pages 전용 경로로 제공할 것이라고 추정했다.
+- 공식 REST API 경로를 확인하기 전에 추정한 엔드포인트를 호출했다.
+
+### 수정 및 반복 방지 규칙
+
+1. Pages 설정은 `/pages`, 배포 실행 상태는 표준 `/deployments`와 `/deployments/{id}/statuses`에서 확인한다.
+2. 처음 사용하는 GitHub REST API는 공식 문서나 `gh api --verbose`로 지원 경로를 확인한 뒤 호출한다.
+3. 404가 발생하면 권한 문제로 단정하지 않고 경로·리소스 존재 여부·인증 범위를 순서대로 분리해 확인한다.
+4. Actions job logs archive는 job 완료 후 조회하고, 실행 중에는 run/job 상태와 deployment status를 사용한다.
+
 ## 2026-08-06 — GitHub Actions pnpm 버전 중복 지정
 
 ### 발생한 오류
