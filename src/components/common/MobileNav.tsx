@@ -1,13 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui';
 import {
-  DYNAMIC_ROUTES_PATH,
   EXTERNAL_ROUTES_PATH,
   ROUTES_PATH,
 } from '@/constants';
@@ -16,10 +14,14 @@ import { Menu, X } from 'lucide-react';
 const focusableSelector =
   'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-export function MobileNav() {
-  const pathname = usePathname();
+type MobileNavProps = {
+  onSearch: () => void;
+};
+
+export function MobileNav({ onSearch }: MobileNavProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -60,6 +62,7 @@ export function MobileNav() {
         aria-label='메뉴 열기'
         className='icon-button'
         onClick={() => setIsOpen(true)}
+        ref={menuButtonRef}
         size='icon'
         type='button'
         variant='ghost'
@@ -94,12 +97,16 @@ export function MobileNav() {
               </Button>
             </div>
             <nav>
-              <Link
-                href={DYNAMIC_ROUTES_PATH.SEARCH({ from: pathname })}
-                onClick={() => setIsOpen(false)}
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  menuButtonRef.current?.focus();
+                  onSearch();
+                }}
+                type='button'
               >
                 Search
-              </Link>
+              </button>
               <Link href={ROUTES_PATH.ARTICLES} onClick={() => setIsOpen(false)}>
                 Articles
               </Link>

@@ -483,29 +483,79 @@ h1 em,
   font-weight: 700;
 }
 
-.search-page {
+.search-overlay {
+  animation: search-overlay-slide-in 833ms
+    linear(
+      0 0%,
+      0.1407 4.43%,
+      0.9383 16.72%,
+      1.0774 20.43%,
+      1.1493 24.31%,
+      1.1629 26.95%,
+      1.1536 29.93%,
+      1.0168 43.09%,
+      0.9766 51%,
+      1.0033 76.88%,
+      1 100%
+    )
+    100ms backwards;
   background: var(--background);
   color: var(--foreground);
-  min-height: 100svh;
-  overflow: hidden;
-  position: relative;
+  display: flex;
+  height: 272px;
+  left: 0;
+  padding-top: 64px;
+  position: fixed;
+  right: 0;
+  top: -64px;
+  z-index: 100;
 }
-.search-page-shell {
+.search-overlay.has-results {
+  height: calc(100svh + 64px);
+}
+.search-overlay-shell {
+  display: flex;
+  flex-direction: column;
+  height: 208px;
   margin-inline: auto;
   max-width: 686px;
+  overflow: hidden;
   padding: 32px;
+  width: 100%;
 }
-.search-page-form {
-  align-items: center;
-  border-bottom: 3px solid var(--accent);
+.search-overlay.has-results .search-overlay-shell {
+  height: 100svh;
+}
+.search-overlay-controls {
   display: flex;
+  flex: 0 0 auto;
+  width: 100%;
+}
+.search-overlay-form {
+  animation: search-overlay-fade-in 400ms 200ms both;
+  align-items: center;
+  display: flex;
+  flex: 1 1 auto;
   height: 40px;
+  min-width: 0;
   position: relative;
 }
-.search-page-form > svg {
-  flex: 0 0 auto;
+.search-overlay-form::after {
+  background: var(--accent);
+  bottom: -3px;
+  content: '';
+  height: 3px;
+  left: 0;
+  position: absolute;
+  right: 0;
 }
-.search-page-form input {
+.search-overlay-form > svg {
+  left: 0;
+  position: absolute;
+  top: 10px;
+  z-index: 1;
+}
+.search-overlay-form input {
   background: transparent;
   border: 0;
   border-radius: 0;
@@ -515,27 +565,32 @@ h1 em,
   font-size: 1.125rem;
   height: 40px;
   line-height: 1.5;
-  padding: 1px 30px 1px 10px;
+  padding: 1px 30px;
+  width: 100%;
 }
-.search-page-form input:focus-visible {
+.search-overlay-form input:focus-visible {
   border: 0;
   box-shadow: none;
   outline: 0;
 }
-.search-page-form input::-webkit-search-cancel-button {
+.search-overlay-form input::-webkit-search-cancel-button {
   display: none;
 }
-.search-page-reset {
+.search-overlay-reset {
   border-radius: 0;
-  flex: 0 0 40px;
   height: 40px;
   opacity: 1;
+  position: absolute;
+  right: 0;
+  top: 0;
   width: 40px;
+  z-index: 1;
 }
-.search-page-reset:disabled {
+.search-overlay-reset:disabled {
   opacity: 0;
 }
-.search-page-close {
+.search-overlay-close {
+  animation: search-overlay-fade-in 400ms 200ms both;
   align-items: center;
   display: flex;
   height: 56px;
@@ -544,31 +599,35 @@ h1 em,
   right: 16px;
   top: 0;
   width: 56px;
-  z-index: 2;
+  z-index: 101;
 }
-.search-page-close:hover,
-.search-page-reset:hover {
+.search-overlay-close:hover,
+.search-overlay-reset:hover {
   color: var(--accent);
 }
-.search-page-results {
+.search-overlay-results {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
   margin: 32px -24px 0;
-  max-height: calc(100svh - 104px);
+  min-height: 0;
   overflow-y: auto;
-  padding: 8px 24px 48px;
+  padding: 8px 24px;
+  overscroll-behavior: contain;
   scrollbar-color: var(--muted) transparent;
   scrollbar-width: thin;
 }
-.search-page-result {
+.search-overlay-result {
   border-bottom: 1px dotted var(--line);
   padding: 0 0 28px;
 }
-.search-page-result + .search-page-result {
+.search-overlay-result + .search-overlay-result {
   padding-top: 24px;
 }
-.search-page-result a {
+.search-overlay-result a {
   display: block;
 }
-.search-page-result a > span {
+.search-overlay-result a > span {
   color: var(--accent);
   display: block;
   font-size: 0.75rem;
@@ -577,13 +636,13 @@ h1 em,
   line-height: 1.5;
   text-transform: uppercase;
 }
-.search-page-result h2 {
+.search-overlay-result h2 {
   font-size: 1.1875rem;
   font-weight: 500;
   line-height: 1.5;
   margin: 4px 0 0;
 }
-.search-page-result p {
+.search-overlay-result p {
   display: -webkit-box;
   font-size: 1rem;
   line-height: 1.5;
@@ -592,31 +651,36 @@ h1 em,
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
-.search-page-result mark {
+.search-overlay-result mark {
   background: hsl(52deg 95% 88%);
   border-radius: 3px;
   color: inherit;
   padding-inline: 2px;
 }
-.dark .search-page-result mark {
+.dark .search-overlay-result mark {
   background: hsl(48deg 70% 32%);
 }
-.search-page-idle,
-.search-page-empty {
+.search-overlay-hint {
   color: var(--muted);
-  padding: 72px 0;
-  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 32px 0 0;
 }
-.search-page-idle p,
-.search-page-empty p {
-  color: var(--foreground);
-  font-size: 1.125rem;
-  font-weight: 500;
-  margin: 0 0 6px;
+@keyframes search-overlay-slide-in {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
-.search-page-idle span,
-.search-page-empty span {
-  font-size: 0.95rem;
+@keyframes search-overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .article-detail-page {
@@ -1027,11 +1091,17 @@ h1 em,
   display: grid;
   margin-top: 56px;
 }
-.mobile-nav-dialog nav a {
+.mobile-nav-dialog nav a,
+.mobile-nav-dialog nav button {
+  background: transparent;
+  border: 0;
   border-bottom: 1px solid var(--line);
+  color: inherit;
+  cursor: pointer;
   font-size: 1.3rem;
   font-weight: 680;
   padding: 17px 0;
+  text-align: left;
 }
 
 .home-site-header {
@@ -1281,19 +1351,25 @@ h1 em,
 }
 
 @media (max-width: 720px) {
-  .search-page-shell {
-    padding: 24px 20px;
+  .search-overlay {
+    height: 288px;
   }
-  .search-page-form {
-    margin-right: 48px;
+  .search-overlay-shell {
+    height: 224px;
+    max-width: none;
+    padding: 32px 16px;
   }
-  .search-page-close {
-    right: 4px;
+  .search-overlay-close {
+    flex: 0 0 24px;
+    height: 24px;
+    margin: 8px 0 0 16px;
+    padding: 0;
+    position: static;
+    width: 24px;
   }
-  .search-page-results {
-    margin-inline: -12px;
-    max-height: calc(100svh - 96px);
-    padding-inline: 12px;
+  .search-overlay-results {
+    margin-inline: -14px;
+    padding-inline: 14px;
   }
   .article-site-header .wordmark {
     font-size: 1.12rem;
@@ -1456,6 +1532,14 @@ h1 em,
   }
   .footer-grid > :first-child {
     grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-overlay,
+  .search-overlay-close,
+  .search-overlay-form {
+    animation: none;
   }
 }
 
