@@ -1,11 +1,13 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui';
 import {
+  DYNAMIC_ROUTES_PATH,
   EXTERNAL_ROUTES_PATH,
   ROUTES_PATH,
 } from '@/constants';
@@ -15,6 +17,7 @@ const focusableSelector =
   'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 export function MobileNav() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -91,6 +94,12 @@ export function MobileNav() {
               </Button>
             </div>
             <nav>
+              <Link
+                href={DYNAMIC_ROUTES_PATH.SEARCH({ from: pathname })}
+                onClick={() => setIsOpen(false)}
+              >
+                Search
+              </Link>
               <Link href={ROUTES_PATH.ARTICLES} onClick={() => setIsOpen(false)}>
                 Articles
               </Link>

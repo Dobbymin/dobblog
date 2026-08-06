@@ -2,6 +2,7 @@ export const SITE_URL = 'https://dobbymin.github.io';
 
 export const ROUTES_PATH = {
   HOME: '/',
+  SEARCH: '/search',
   ARTICLES: '/articles',
   ARTICLE: '/articles/:slug',
   ABOUT: '/about',
@@ -16,15 +17,23 @@ export const EXTERNAL_ROUTES_PATH = {
 
 type ArticlesSearchParams = Record<string, string | undefined>;
 
+const withSearchParams = (
+  pathname: string,
+  searchParams: Record<string, string | undefined> = {},
+) => {
+  const query = new URLSearchParams(
+    Object.entries(searchParams).filter(
+      (entry): entry is [string, string] => Boolean(entry[1]),
+    ),
+  ).toString();
+
+  return query ? `${pathname}?${query}` : pathname;
+};
+
 export const DYNAMIC_ROUTES_PATH = {
   ARTICLE: (slug: string) => ROUTES_PATH.ARTICLE.replace(':slug', slug),
-  ARTICLES: (searchParams: ArticlesSearchParams = {}) => {
-    const query = new URLSearchParams(
-      Object.entries(searchParams).filter(
-        (entry): entry is [string, string] => Boolean(entry[1]),
-      ),
-    ).toString();
-
-    return query ? `${ROUTES_PATH.ARTICLES}?${query}` : ROUTES_PATH.ARTICLES;
-  },
+  ARTICLES: (searchParams: ArticlesSearchParams = {}) =>
+    withSearchParams(ROUTES_PATH.ARTICLES, searchParams),
+  SEARCH: (searchParams: Record<string, string | undefined> = {}) =>
+    withSearchParams(ROUTES_PATH.SEARCH, searchParams),
 };

@@ -1,23 +1,26 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import { useEffect, useState } from 'react';
 
 import { MobileNav, ThemeToggle } from '@/components';
 import {
+  DYNAMIC_ROUTES_PATH,
   EXTERNAL_ROUTES_PATH,
   ROUTES_PATH,
 } from '@/constants';
-import { Rss, Search, Volume2, VolumeX } from 'lucide-react';
+import { Rss, Search } from 'lucide-react';
 
 type HeaderProps = {
   variant?: 'default' | 'home' | 'article';
 };
 
 export const Header = ({ variant = 'default' }: HeaderProps) => {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isSoundMuted, setIsSoundMuted] = useState(false);
+  const searchHref = DYNAMIC_ROUTES_PATH.SEARCH({ from: pathname });
 
   useEffect(() => {
     if (variant === 'default') return;
@@ -60,22 +63,10 @@ export const Header = ({ variant = 'default' }: HeaderProps) => {
               <Link
                 aria-label='글 검색'
                 className='icon-button'
-                href={ROUTES_PATH.ARTICLES}
+                href={searchHref}
               >
                 <Search size={20} strokeWidth={2} />
               </Link>
-              <button
-                aria-label={isSoundMuted ? '사운드 켜기' : '사운드 끄기'}
-                className='icon-button'
-                onClick={() => setIsSoundMuted((value) => !value)}
-                type='button'
-              >
-                {isSoundMuted ? (
-                  <VolumeX size={20} strokeWidth={2} />
-                ) : (
-                  <Volume2 size={20} strokeWidth={2} />
-                )}
-              </button>
               <ThemeToggle />
               <a
                 aria-label='RSS feed'
@@ -91,7 +82,7 @@ export const Header = ({ variant = 'default' }: HeaderProps) => {
                 <Link
                   aria-label='글 검색'
                   className='icon-button'
-                  href={ROUTES_PATH.ARTICLES}
+                  href={searchHref}
                 >
                   <Search size={18} strokeWidth={2.25} />
                 </Link>
