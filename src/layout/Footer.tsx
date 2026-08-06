@@ -1,15 +1,12 @@
 import Link from 'next/link';
 
-import { CloudSection, HeroArtwork } from '@/components';
+import { CloudSection } from '@/components';
 import { Code2, Rss } from 'lucide-react';
 
 export const Footer = () => {
   return (
     <footer className='site-footer'>
-      <div className='footer-clouds'>
-        <CloudSection sectionBgColor='var(--color-footer)' />
-        <HeroArtwork variant='footer' />
-      </div>
+      <CloudSection sectionBgColor='var(--color-footer)' />
       <div className='footer-content'>
         <div className='site-shell footer-grid'>
           <div>

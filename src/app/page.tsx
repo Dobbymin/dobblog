@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { Cloud, HeroArtwork } from '@/components';
+import { Cloud } from '@/components';
 import { Footer, Header } from '@/layout';
 import { posts } from '@/lib/posts';
 import { ArrowRight } from 'lucide-react';
@@ -11,9 +11,7 @@ export default function Home() {
       <Header variant='home' />
       <main className='clone-home'>
         <section className='clone-home-sky'>
-          <Cloud height='456px' viewBoxHeight={456} />
-          <HeroArtwork />
-          <div aria-hidden='true' className='home-foreground-cloud' />
+          <Cloud height='506px' variant='home' viewBoxHeight={506} />
         </section>
         <div className='site-shell clone-home-grid'>
           <section className='home-newest'>
