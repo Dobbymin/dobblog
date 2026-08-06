@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { ArticleToc } from '@/components';
-import { DYNAMIC_ROUTES_PATH, ROUTES_PATH } from '@/constants';
+import { DYNAMIC_ROUTES_PATH } from '@/constants';
 import { Footer, Header } from '@/layout';
 import { formatDate, getPost, posts } from '@/lib/posts';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -44,20 +44,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <Header />
       <main className='site-shell article-page'>
         <header className='article-header'>
-          <Link className='back-link' href={ROUTES_PATH.ARTICLES}>
-            <ArrowLeft size={16} /> Articles
-          </Link>
-          <div className='post-card-meta'>
-            <time dateTime={post.date}>{formatDate(post.date)}</time>
-            <span>{post.readingTime}</span>
-          </div>
           <h1>{post.title}</h1>
-          <p>{post.description}</p>
-          <div className='tag-list'>
-            {post.tags.map((tag) => (
-              <span key={tag}>{tag}</span>
-            ))}
-          </div>
+          <dl className='article-meta'>
+            <dt>Filed under</dt>
+            <dd>{post.tags[0]}</dd>
+            <dt>on</dt>
+            <dd>
+              <time dateTime={post.date}>{formatDate(post.date)}</time>
+            </dd>
+          </dl>
         </header>
         <div className='article-layout'>
           <article className='prose'>

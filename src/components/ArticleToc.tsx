@@ -1,5 +1,4 @@
 import { toAnchorId } from '@/lib/toc';
-import { List } from 'lucide-react';
 
 type ArticleTocProps = {
   headings: string[];
@@ -9,10 +8,8 @@ export function ArticleToc({ headings }: ArticleTocProps) {
   if (!headings.length) return null;
 
   return (
-    <aside className='article-toc'>
-      <p>
-        <List aria-hidden='true' size={15} /> On this page
-      </p>
+    <nav aria-label='Table of Contents' className='article-toc'>
+      <h2>Table of Contents</h2>
       <ol>
         {headings.map((heading) => (
           <li key={heading}>
@@ -20,6 +17,6 @@ export function ArticleToc({ headings }: ArticleTocProps) {
           </li>
         ))}
       </ol>
-    </aside>
+    </nav>
   );
 }
