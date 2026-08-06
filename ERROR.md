@@ -1,5 +1,41 @@
 # 작업 오류 기록
 
+## 2026-08-06 — 원격 템플릿 파일 경로 추정 조회
+
+### 발생한 오류
+
+- Next.js GitHub Pages 공식 템플릿의 설정 파일명을 `next.config.js`로 추정해 GitHub API 404와 base64 decode 오류가 연속 발생했다.
+- 실제 tree API를 다시 조회하면서 query string이 포함된 경로를 quote하지 않아 zsh의 `no matches found` 오류가 발생했다.
+
+### 원인
+
+- 원격 저장소의 실제 파일 트리를 먼저 확인하지 않고 일반적인 파일명을 사용했다.
+- 첫 API 호출 성공 여부와 무관하게 decode 명령을 연결했다.
+
+### 수정 및 반복 방지 규칙
+
+1. 원격 파일을 읽기 전에 contents 또는 tree API로 실제 경로를 확인한다.
+2. API 응답을 pipe로 후처리할 때 앞 단계 실패가 뒤 단계의 추가 오류로 이어지지 않도록 명령을 분리한다.
+3. `?`, `&` 등 shell glob·제어 문자가 포함된 API 경로는 항상 quote한다.
+
+## 2026-08-06 — Static export 런타임 검증의 잘못된 200 판정
+
+### 발생한 오류
+
+- Python 정적 서버에서 `/articles/design-system/` 응답이 200이라는 사실만 보고 상세 페이지가 정상 제공된다고 판단했다.
+- 실제 산출물은 `out/articles/design-system.html`이며, trailing slash URL은 정적 서버의 디렉터리 목록을 반환할 수 있다.
+
+### 원인
+
+- HTTP 상태만 확인하고 응답 본문에 페이지 제목·본문·Next.js asset이 포함됐는지 확인하지 않았다.
+- GitHub Pages의 extensionless URL 처리와 로컬 Python 서버의 디렉터리 처리 차이를 구분하지 않았다.
+
+### 수정 및 반복 방지 규칙
+
+1. 정적 사이트 검증은 상태 코드와 페이지 고유 콘텐츠를 함께 확인한다.
+2. `out` 파일 구조를 먼저 확인하고 `/path`, `/path/`, `/path.html` 중 실제 배포 URL을 검증한다.
+3. GitHub Pages 배포 후 공개 URL에서 홈·하위 경로·asset을 다시 확인한다.
+
 ## 2026-08-06 — 하네스 명령의 RTK prefix 누락
 
 ### 발생한 오류
