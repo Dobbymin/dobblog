@@ -21,6 +21,7 @@
   --color-cloud-400: hsl(201deg 60% 86%);
   --color-cloud-500: hsl(200deg 80% 83%);
   --color-cloud-700: hsl(210deg 30% 55%);
+  --color-footer-cloud: hsl(203deg 79% 83%);
   --color-footer: hsl(213deg 80% 96%);
   --font-sans: var(--font-pretendard), system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -43,6 +44,7 @@
   --color-cloud-400: hsl(213deg 40% 10%);
   --color-cloud-500: hsl(213deg 40% 12%);
   --color-cloud-700: hsl(210deg 14% 66%);
+  --color-footer-cloud: hsl(211deg 40% 16%);
   --color-footer: hsl(210deg 15% 9%);
 }
 
@@ -705,24 +707,65 @@ h1 em,
 }
 
 .site-footer {
+  background: linear-gradient(to bottom, var(--color-sky-from), var(--color-sky-to));
   overflow: hidden;
+  padding-top: clamp(150px, 15vw, 192px);
+  position: relative;
 }
-.site-footer > div:first-child {
-  margin-bottom: -1px;
+.footer-cloudscape {
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+}
+.footer-cloudscape svg {
+  display: block;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  width: max(100%, 1557px);
+}
+.footer-cloudscape-back {
+  bottom: 0;
+  height: 213px;
+}
+.footer-cloudscape-front {
+  height: 250px;
+  top: 0;
+  width: max(100%, 320rem) !important;
 }
 .footer-content {
-  background: var(--color-footer);
-  padding: 64px 0 27px;
+  padding: 0 0 27px;
+  position: relative;
+}
+.footer-intro {
+  padding: 0 0 20px;
+}
+.footer-intro .wordmark {
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: -0.06em;
+}
+.footer-intro .wordmark span {
+  color: inherit;
+  font-size: 1em;
+  margin: 0;
+}
+.footer-intro p {
+  color: var(--foreground);
+  font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1.2;
+  margin: 16px 0 0;
 }
 .footer-grid {
   display: grid;
-  gap: clamp(28px, 5vw, 72px);
-  grid-template-columns: 1.7fr 1fr 0.8fr 0.8fr;
-}
-.footer-grid p {
-  color: var(--muted);
-  font-size: 0.92rem;
-  margin: 17px 0 0;
+  gap: clamp(28px, 7vw, 132px);
+  grid-template-columns: 1.7fr 1fr 1fr;
+  padding-top: 24px;
 }
 .footer-grid h2 {
   color: var(--muted);
@@ -739,7 +782,7 @@ h1 em,
   padding: 0;
 }
 .footer-grid li {
-  margin: 9px 0;
+  margin: 6px 0;
 }
 .footer-grid li a {
   font-size: 0.9rem;
@@ -774,8 +817,8 @@ h1 em,
   color: var(--muted);
   font-family: var(--font-mono);
   font-size: 0.66rem;
-  margin-top: 49px;
-  padding-top: 20px;
+  margin-top: 26px;
+  padding-top: 16px;
 }
 
 .mobile-nav-overlay {
@@ -813,20 +856,26 @@ h1 em,
 }
 
 .home-site-header {
-  background: transparent;
+  background: linear-gradient(
+    to top,
+    transparent 0,
+    var(--color-sky-from) 100%
+  );
   border-bottom: 0;
   left: 0;
   position: fixed;
   right: 0;
-  top: 0;
+  top: 32px;
+  transition:
+    background 160ms ease,
+    top 180ms ease;
 }
 .home-site-header.is-scrolled {
-  background: color-mix(in srgb, var(--background) 88%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--line) 65%, transparent);
-  box-shadow: 0 4px 18px hsl(210deg 20% 20% / 0.06);
+  background: linear-gradient(to top, transparent 0, var(--background) 100%);
+  top: 0;
 }
 .home-site-header .site-header-inner {
-  height: 144px;
+  height: 80px;
 }
 .home-site-header .wordmark,
 .home-site-header .desktop-nav a,
@@ -993,6 +1042,9 @@ h1 em,
 }
 
 @media (max-width: 720px) {
+  .home-site-header {
+    top: 0;
+  }
   .home-site-header .site-header-inner {
     height: 76px;
   }
