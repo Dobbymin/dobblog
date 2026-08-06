@@ -1,0 +1,90 @@
+export const metadata = {
+  slug: 'design-system',
+  title: 'Design System 을 만들고 배포할.. 수 있겠.. 지?',
+  description:
+    'SSR과 CSR 환경 모두에서 사용할 수 있는 Design System 라이브러리를 만들어보자!',
+  date: '2026-02-08',
+  readingTime: '3 min read',
+  tags: ['Project'],
+  headings: ['문제상황 인식', '개발환경 선택', '마무리'],
+};
+
+### 문제상황 인식
+
+~~매번 디자인을 생각하면서 컴포넌트를 만들기 너무 귀찮아서..~~ 만드는 제품에 대한 일관성 있는 디자인이 필요해보였다.
+
+하지만 함께 협업하는 프론트엔드 개발 참여자들의 기술 스택이 서로 달라서 항상 스타일링 라이브러리 선택시 성능이나 DX 보다는 “모든 사람이 사용해 본 라이브러리” 에 초점이 맞춰지는 것 같아서 개인적으로는 안타까웠던 적이 많았다. (러닝 커브도 DX라고 해야하나…?)
+
+예를 들어
+
+- A : tailwindcss, shadcn/ui, next.js
+- B : Emotion, charka-ui, vite
+
+또한 CSR 환경과 SSR 환경에서 CSS-in-JS 방식은 성능적인 부분에서 약간의 차이가 발생하기 때문에, 두 환경 모두 대응할 수 있어야 한다.
+
+#### 왜 SSR(특히 Next.js App Router)에서는 런타임 CSS-in-JS를 지양할까?
+
+[[Next.js] App Router에서의 CSS-in-JS 사용과 한계](https://unhandled.tistory.com/entry/Nextjs-App-Router%EC%97%90%EC%84%9C-CSS-in-JS-%EC%82%AC%EC%9A%A9%ED%95%B4%EB%B3%B4%EA%B8%B0)
+
+내가 생각한 가장 큰 이유는 다음과 같다.
+
+1. **런타임 오버헤드:** CSS-in-JS는 자바스크립트 실행 시점에 스타일을 계산하고 DOM에 주입한다. 이는 브라우저의 메인 스레드에 부담을 주게 된다.
+2. **Streaming 및 RSC 호환성:** Next.js의 서버 컴포넌트(RSC)는 서버에서 스타일을 미리 계산해야 하는데, 런타임 CSS-in-JS 라이브러리들은 React Context API를 기반으로 동작하기 때문에 서버 컴포넌트에서 직접 사용이 불가능하거나 `'use client'`를 강제하게 된다.
+3. **스타일 주입 시점:** 서버에서 생성된 정적 HTML이 먼저 표시된 후, JS가 로드되어 스타일을 계산하는 과정에서 스타일이 뒤늦게 적용되어 화면이 깜빡이는 현상(FOUC)이 발생할 수 있다.
+
+그렇다면 CSR과 SSR 에서 큰 이슈없이 사용할 수 있는 라이브러리 중에 Emotion과 styled-components는 제외하고 남은 라이브러리는
+
+1. TailwindCSS
+2. SCSS
+3. vanilla-extract
+
+이 정도의 CSS 라이브러리가 살아남았다!
+
+#### 최종 선택 : vanilla-extract
+
+next.js를 공부하는 개발자들에게는 TailwindCSS가 그렇게 낯설지 않겠지만, 아직 react + vite에 대해 공부하고 있다면 TailwindCSS를 사용하는데에는 아직까지도 많은 러닝커브가 요구된다고 생각한다.
+
+또한, 직접 디자인시스템을 만들고, 라이브러리를 만든다 한들, “shadcn/ui 라는 강력한 라이브러리와 그들의 생태계를 이길 수 있을까?” 라는 생각이 들었다.
+
+따라서 TailwindCSS를 배제하면 SCSS와 vanilla-extract 정도가 남았다.
+
+여기서 나의 목표는 shadcn과 같은 간편함과 charka-ui 처럼 props로 간단하게 스타일링 할 수 있도록 하는 방법을 이용해서 최대한 개발자경험(DX)가 좋은 라이브러리를 만드는 것이기 때문에 최종적으로 vanillla-extract를 선택하게 되었다.
+
+**vanilla-extract**를 선택한 이유는 다음과 같다.
+
+1. **Zero-runtime:** 빌드 타임에 정적 CSS 파일로 추출되어 SSR 성능 이슈가 없다.
+
+- **Type-safe:** TypeScript로 스타일을 작성하기 때문에 강력한 자동완성과 타입 추론을 제공한다. (DX의 정점!)
+- **Recipe API:** `@vanilla-extract/recipes`를 이용하면 chakra-ui와 유사한 Variant 기반 디자인 시스템을 가장 깔끔하게 구현할 수 있다.
+
+~~안써봐서 잘 모른다. 차차 알아가보자…….~~
+
+### 개발환경 선택
+
+개발을 진행할 때 성능과 참고할 레퍼런스를 고려했을 때 아래의 기술스텍을 사용하고자 한다.
+
+- **Turborepo:** 모노레포의 빌드 캐싱과 효율적인 워크스페이스 관리.
+- **Vite + Rollup:** 개발 서버의 빠른 피드백(Vite)과 라이브러리 배포를 위한 최적화된 번들링(Rollup).
+- **pnpm:** 엄격하고 빠른 패키지 관리.
+- **Storybook:** 독립적인 컴포넌트 주도 개발(CDD) 환경 구축.
+
+#### 폴더 구조
+
+```bash
+dobby-design-system/
+├── apps/
+│   ├── web/          # Next.js 앱 (실제 서비스 혹은 테스트용 - SSR 검증)
+│   └── storybook/    # Storybook (문서화 전용 앱)
+├── packages/
+│   ├── ui/           # UI 라이브러리 (Vite + Rollup + vanilla-extract)
+│   ├── theme/           # 디자인 토큰 (공통 변수 관리)
+│   ├── eslint-config/        # 공통 Eslint 설정
+│   ├── typescript-config/    # 공통 TypeScript 설정
+│   └── utils/                # 공통 유틸리티
+├── turbo.json
+└── package.json
+```
+
+### 마무리
+
+물론 만들면서 구조적으로 조금씩 바뀔수도 있고, 결국 tailwind를 선택해서 다시 만들수도 있겠지만… 일단은 이런 생각으로 시작해볼려고 한다. 과연 언제쯤 사용가능할까…? 목표는 올해 상반기..!!

@@ -1,0 +1,187 @@
+export const metadata = {
+  slug: 'javascript-constructor-function',
+  title: '자바스크립트의 생성자함수',
+  description: '자바스크립트의 생성자함수에 대해 알아보자!',
+  date: '2025-10-05',
+  readingTime: '4 min read',
+  tags: ['Develop'],
+  headings: [
+    '📌 생성자 함수 (Constructor function)',
+    '📌 React와 생성자 함수',
+    '⭐️ 결론',
+  ],
+};
+
+동일한 구조를 갖는 여러 개의 객체를 만들어야 하는 상황을 생각해보자. 예를 들어, 여러 명의 사용자 정보를 객체로 관리해야 할 때, 매번 객체 리터럴로 생성하는 것은 비효율적이고 반복적인 작업이다.
+
+```tsx
+const person1 = {
+  name: '홍길동',
+  age: 30,
+  sayHi: function () {
+    console.log('안녕하세요!' + this.name + '입니다');
+  },
+};
+const person2 = {
+  name: '김철수',
+  age: 25,
+  sayHi: function () {
+    console.log('안녕하세요!' + this.name + '입니다');
+  },
+};
+```
+
+이러한 문제점들을 해결하기 위해 Javascript 에서는 객체를 생성하는 특별한 함수인 **생성자 함수 (Constructor Function)**를 제공한다.
+
+## 📌 생성자 함수 (Constructor function)
+
+생성자 함수란 `new` 연산자와 함께 호출되어, 특정 구조를 가진 객체 (인스턴스)를 생성하고 초기화하는 함수이다.
+
+일반적으로 생성자 함수의 이름은 파스칼 케이스로 작성한다.
+
+```tsx
+// 'Person'이라는 설계도(생성자 함수)
+function Person(name, age, job) {
+  this.name = name;
+  this.age = age;
+  this.job = job;
+  this.sayHi = function () {
+    console.log('안녕하세요!' + this.name + '입니다');
+  };
+}
+
+// new 연산자로 설계도에서 실제 객체(인스턴스)를 생성
+const person1 = new Person('홍길동', 30, 'Manager');
+const person2 = new Person('김철수', 25, 'Designer');
+
+person1.sayHi(); // 안녕하세요! 홍길동입니다
+person2.sayHi(); // 안녕하세요! 김철수입니다
+```
+
+이처럼 생성자 함수를 사용하면 코드의 재사용성을 높이고, 반복되는 코드를 크게 줄일 수 있다.
+
+### 🍀 `new` 연산자의 동작 원리
+
+`new` 연산자로 생성자 함수를 호출하면, 내부적으로 다음과 같은 일이 일어난다.
+
+#### **1. 빈 객체 생성**
+
+`new` 연산자는 먼저 빈 객체를 하나 만든다.
+
+#### **2. 프로토타입 연결**
+
+새로 만들어진 객체의 `[[Prototype]]`(내부 슬롯, `__proto__`로 접근 가능)이 생성자 함수의 `prototype` 프로퍼티를 참조하게 한다.
+
+#### **3. `this` 바인딩**
+
+생성자 함수 내부의 `this`가 새로 만들어진 객체를 가리키도록 바인딩한다.
+
+#### **4. 객체 반환**
+
+함수가 명시적으로 다른 객체를 반환하지 않으면, `this`에 바인딩된 새로 만들어진 객체가 반환된다.
+
+### 🍀 프로토타입 (Prototype)
+
+앞선 `Person` 생성자 함수에는 한 가지 비효율적인 점이 있다. 바로 `sayHi` 메소드다. `new Person(...)`이 호출될 때마다, 각 인스턴스(`person1`, `person2`)는 `sayHi`라는 메소드를 위한 메모리 공간을 각각 새로 할당받는다. 모든 인스턴스가 똑같은 내용의 `sayHi` 함수를 사용하는데도 말이다.
+
+이러한 낭비를 줄이기 위해 **프로토타입(Prototype)**이 등장한다. 프로토타입은 **'공유 창고'**와 같다. 모든 인스턴스가 공통으로 사용할 프로퍼티나 메소드를 이 프로토타입 객체에 저장해두면, 모든 인스턴스는 이 창고에 접근하여 해당 기능을 공유해서 사용할 수 있다.
+
+```tsx
+function Person(name, age, job) {
+  this.name = name;
+  this.age = age;
+  this.job = job;
+}
+
+// sayHi 메소드를 '공유 창고(prototype)'에 보관한다.
+Person.prototype.sayHi = function () {
+  console.log('안녕하세요!' + this.name + '입니다');
+};
+
+const person1 = new Person('홍길동', 30, 'Manager');
+const person2 = new Person('김철수', 25, 'Designer');
+
+// 각 인스턴스는 이제 공유 창고에 있는 sayHi를 사용할 수 있다.
+person1.sayHi();
+person2.sayHi();
+```
+
+이제 `sayHi` 함수는 단 한 번만 생성되어 메모리를 공유하므로 훨씬 더 효율적이다.
+
+#### 프로토타입 체인(Prototype Chain)
+
+JavaScript는 특정 객체의 프로퍼티나 메소드에 접근하려고 할 때, 만약 해당 객체에 없다면, `[[Prototype]]` 링크를 따라 자신의 부모 역할을 하는 프로토타입 객체에서 차례대로 검색한다. 이것을 **프로토타입 체인**이라고 한다.
+
+`person1.sayHi()`를 호출했을 때, 엔진은 먼저 `person1` 객체 자체에서 `sayHi`를 찾는다. 없으면, `person1`의 부모인 `Person.prototype`으로 올라가서 `sayHi`를 찾아 실행한다. 모든 객체의 최상위 부모는 `Object.prototype`이며, 이것이 프로토타입 체인의 종점이다.
+
+## **📌 React와 생성자 함수**
+
+이러한 생성자 함수와 프로토타입의 개념은 React 컴포넌트의 역사와 발전에 깊은 관련이 있다.
+
+### **1. 클래스 컴포넌트: 생성자 함수의 직계 후손**
+
+과거에 많이 사용되던 React의 클래스 컴포넌트는 생성자 함수와 프로토타입 개념을 거의 그대로 물려받았다. `class` 키워드 자체가 사실 생성자 함수와 프로토타입을 더 편리하게 사용하기 위한 문법적 설탕(Syntactic Sugar)이다.
+
+```tsx
+import React from 'react';
+
+class Counter extends React.Component {
+  // constructor가 바로 생성자 함수의 역할을 한다.
+  constructor(props) {
+    super(props);
+    // 'this.state'로 컴포넌트의 초기 상태를 설정한다.
+    this.state = { count: 0 };
+    // 메소드에서 this가 풀리지 않도록 바인딩하기도 한다.
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  // 이 메소드는 Counter.prototype에 저장되어 모든 인스턴스가 공유한다.
+  handleClick() {
+    this.setState({ count: this.state.count + 1 });
+  }
+
+  render() {
+    return (
+      <div>
+        <p>{this.state.count}</p>
+        <button onClick={this.handleClick}>증가</button>
+      </div>
+    );
+  }
+}
+```
+
+클래스 컴포넌트의 `constructor`는 객체의 초기 상태(`this.state`)를 설정하는 역할을 하며, `render`나 `handleClick` 같은 메소드들은 프로토타입에 정의되어 메모리를 효율적으로 사용한다.
+
+### **2. 함수형 컴포넌트: 새로운 방식의 초기화**
+
+현대의 함수형 컴포넌트는 `class`나 `constructor`를 직접 사용하지 않는다. 하지만 '초기화'라는 생성자의 핵심 역할은 **훅(Hook)**, 특히 **`useState`**가 대신하고 있다.
+
+```tsx
+import React, { useState } from 'react';
+
+function Counter() {
+  // useState가 컴포넌트의 상태를 '초기화'하는 역할을 한다.
+  // 생성자 함수의 'this.state = ...' 와 비슷한 역할이다.
+  const [count, setCount] = useState(0);
+
+  const handleClick = () => {
+    setCount(count + 1);
+  };
+
+  return (
+    <div>
+      <p>{count}</p>
+      <button onClick={handleClick}>증가</button>
+    </div>
+  );
+}
+```
+
+함수형 컴포넌트는 매 렌더링마다 새로운 실행 컨텍스트에서 실행되지만, React는 `useState` 같은 훅을 통해 컴포넌트의 상태를 기억하고 관리한다. 즉, **패러다임은 바뀌었지만 '상태를 초기화하고 관리한다'는 생성자의 근본적인 역할은 훅을 통해 이어지고 있는 것이다.**
+
+## ⭐️ 결론
+
+**생성자 함수**는 객체를 만드는 '설계도'이고, **프로토타입**은 그 설계도로 만들어진 모든 객체들이 메소드와 프로퍼티를 효율적으로 '공유'하는 방법이다. 이 둘은 JavaScript 객체 지향 프로그래밍의 근간을 이루는 매우 중요한 개념이다.
+
+물론 현대 JavaScript에서는 `class` 키워드를 사용하여 이 모든 과정을 더 간결하게 표현할 수 있지만, 그 내부 동작 원리는 여전히 이 생성자 함수와 프로토타입을 기반으로 한다. 이 원리를 이해하면 JavaScript를 더 깊이 있게 다룰 수 있게 될 것이다.

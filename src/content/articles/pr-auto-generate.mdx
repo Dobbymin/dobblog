@@ -1,0 +1,134 @@
+export const metadata = {
+  slug: 'pr-auto-generate',
+  title: 'PR 자동생성기',
+  description: 'Github Action과 Gemini를 활용해서 PR 작성을 자동화해보자!',
+  date: '2025-08-19',
+  readingTime: '4 min read',
+  tags: ['Project'],
+  headings: ['배경'],
+};
+
+## 배경
+
+최근에 서울에서 멘토님을 만나뵙고, 이력서와 포토폴리오 작성에 대해 여러가지 피드백을 받았다.
+
+내 이력서를 살펴보고, 연결해두었던 PR을 읽어보더니 "어떤 `기능` 을 `왜` 사용했고, `어떻게` 사용하는지" 에 대한 설명이 없다고 하셨다. 다행히 나는 `commit message`를 최대한 자세하게 작성하는 편이라 대충 어떤 기능을 구현했는지 까지는 알 수 있었다.
+
+기능구현에 대한 사항들을 **PR**에 작성하거나 **블로그 글** 등을 통해서 정리하는 습관을 길러보자는 미션(?)을 주셨다.
+
+그래서 최근 프로젝트에서는 Pull Request 작성을 매우매우 꼼꼼하게 하고있다.
+
+[clip 프로젝트 PR #38 : response type 지정 및 auth store 적용](https://github.com/CilpPJ/ClipFE/pull/38)
+[그림판 과제 PR #16 : Canvas 기능 구현](https://github.com/Dobbymin/react-canvas/pull/16)
+
+확실히 PR을 자세하게 작성하니까
+
+> 1. 어떤 작업을 했는지 자세하게 알 수 있었다.
+> 2. 어떤 생각으로 그 작업을 도입하게 되었고, 진행되었는지 알 수 있었다.
+> 3. 나중에 내가 다시 읽어봤을 때 빠르게 이해할 수 있었다.
+> 4. 협업할 때 다른 팀원이 읽어봤을 때 내가 설명을 자세하게 하지 않아도 PR을 읽어보는 정도로 어느정도 설명이 되었다.
+
+생각보다 장점이 많았던 것 같다.
+
+요즘은 프로젝트를 진행할때 Gemini를 주로 사용하고 있는데 여기다가 내 PR 템플릿을 던져주고, 내가 구현한 내용을 적어주면서 PR을 작성해달라고 요청한다.
+
+#### 내가 Gemini를 활용하는 방법
+
+1. 코드 수정이나 새로운 기능 구현을 할때 Gemini 한테 물어보고, 관련 배경지식이나 공식문서 등을 알려달라고 해서 구글링을 통해 찾아본다.
+
+2. 다시 Gemini 한테 관련된 블로그 글이나 링크를 제공해주고, 그 링크를 바탕으로 다시 수정해달라고 한다.
+
+3. 어떤 부분이 수정되었는지, 왜 그렇게 수정했는지 Gemini한테 ~~Gemini를 갈구고~~ 물어보고 **이해**하기 위해 노력한다.
+
+이런식으로 개발을 진행하다 보니 나의 Gemini에는 많은 **흔적**들이 남게된다. 나는 이 **흔적**을 바탕으로 PR을 작성할때 활용한다.
+
+이런 방식으로 최근에 PR을 최대한 자세하게 작성하고 있다.
+
+### 이 과정들을 자동화하는 방법은 없나?
+
+서울에 갔을때 멘토님이 "아이디어는 많은데 시간이 없어서 못하는게 너무 많다."라고 말씀하시며, Github action을 활용해서 이것 저것 만들고 싶은게 많다고 하셨다.
+
+멘토님께서는 **"대부분의 Github 기능들은 Github Action으로 자동화 할 수 있어요!"** 라고 알려주셨다.
+
+[단국대학교 강의 시간표를 제공하는 서비스를 만들자](https://junilhwang.github.io/TIL/side-project/dku-schedule-manager/#%E1%84%83%E1%85%A1%E1%86%AB%E1%84%80%E1%85%AE%E1%86%A8%E1%84%83%E1%85%A2%E1%84%92%E1%85%A1%E1%86%A8%E1%84%80%E1%85%AD-%E1%84%80%E1%85%A1%E1%86%BC%E1%84%8B%E1%85%B4-%E1%84%89%E1%85%B5%E1%84%80%E1%85%A1%E1%86%AB%E1%84%91%E1%85%AD%E1%84%85%E1%85%B3%E1%86%AF-%E1%84%8C%E1%85%A6%E1%84%80%E1%85%A9%E1%86%BC%E1%84%92%E1%85%A1%E1%84%82%E1%85%B3%E1%86%AB-%E1%84%89%E1%85%A5%E1%84%87%E1%85%B5%E1%84%89%E1%85%B3%E1%84%85%E1%85%B3%E1%86%AF-%E1%84%86%E1%85%A1%E1%86%AB%E1%84%83%E1%85%B3%E1%86%AF%E1%84%8C%E1%85%A1)
+
+멘토님께서는 이 프로젝트 또한 **Github Action의 '스케줄'**이라는 기능을 활용했다고 말씀해주셨다.
+
+그리고 Github API에서 제공하는 여러가지 문서를 보며 직접 원하는 데이터를 가져오는 과정을 보여주셨고, **Github Token**을 넣으면 **더 많은 요청(횟수)**을 할 수 있다고 알려주셨다.
+
+[Github API 공식문서](https://docs.github.com/ko/rest?apiVersion=2022-11-28)
+
+사실 지금 하고있는 프로젝트가 있어서 하나만 끝나면 멘토님이 말씀하셨던 그 아이디어를 활용해서 뭔가 만들어보고 싶었다.
+(근데 최근에 이미 비슷한걸 만드신것 같다... ㅠㅠ )
+
+그래서 멘토님의 꿀팁을 바탕으로 **"PR 자동화"**에 대해 고민을 해보았다.
+
+물론 자동화를 하게 되면 **흔적** 들을 활용할 수 없기 때문에 자세하게는 작성할 수 없겠지만, 해커톤과 같은 빠른 호흡으로 진행되는 프로젝트에서는 충분히 활용이 가능할꺼라 생각했다.
+
+#### 생각을 해보자!
+
+일단 준비물은 Github Action과 Gemini API가 떠올랐다. 둘다 무료로 이용할 수 있고, Gemini API는 최근에 Gemini Cli를 써본다고 사용해본 적이 있었기 때문에 활용하면 좋을것 같다는 생각이 들었다. (그냥 API KEY가 있었기 때문...)
+
+그 다음은 어떻게 진행할지 생각을 해보았다.
+
+> 1. issue에서 branch를 생성하고, commit을 하고나서 push를 하면 PR이 열린다.
+> 2. 이때 github action을 활용해서 `commit message`를 추적해보고, 변경사항에 대해 알아본다.
+> 3. `commit message`를 바탕으로 Gemini한테 PR을 작성해달라고 해보자!
+
+그렇게 나의 1호 PR 자동 생성 및 자동 작성기 ~~(노예 1호)~~ 가 완성되었다.
+
+![](/images/pr-auto-generate/1.png)
+
+이정도면 생각했던대로 딱 해커톤처럼 빠르게 흘러가는 프로젝트에서 **'어떤 기능을 구현했는지'** 정도는 알아볼 수 있을것 같다고 생각했다.
+
+근데 여기서 문제는 **"github-actions" 이라는 Bot**이 PR을 생성해서 Gemini PR Code Review를 사용한다면 Review를 진행해주지 않는다.
+
+여기서 또 생각을 해보았다.
+
+> 그럼 PR을 생성하고 Github action이 comment에 `'/gemini review'`를 작성해주면 되는거 아닌가?
+
+최근 프로젝트에서 스토리북을 사용하면서 chromatic이라는 배포 방식을 사용하게 되었고, github action이 comment로 배포 링크를 알려주는 기능을 사용해본 적이 있었다.
+
+![](/images/pr-auto-generate/2.png)
+
+이거 처럼 comment 기능을 활용해서 gemini가 리뷰를 하게 시켜볼려고 했다.
+
+![](/images/pr-auto-generate/3.png)
+
+그렇게 Gemini와 Claude와 Cursor를 이용해서 새롭게 코드를 수정했고, comment가 아닌 내 개인 Github Token을 넣어서 내가 작성한 PR처럼 생성하는 기능으로 수정하게 되었다.
+(나는 comment에 `'/gemini review'`를 작성해달라고 요청했는데 이렇게 해주더라..)
+
+아무튼 이렇게 2호 PR 생성기가 완성되었다.
+
+![](/images/pr-auto-generate/4.png)
+
+아래에 보면 Gemini PR Code Review 도 정상화되었다.
+
+![](/images/pr-auto-generate/5.png)
+
+여기에 몇가지 기능을 더 추가해보았다.
+
+> 1. Assignees에 내 이름 넣기
+> 2. 이미 PR이 생성되었다면 github action을 skip 하기
+> 3. PR 제목을 issue의 제목으로 만들기
+> 4. 코드리뷰하는 model 을 gemini 2.5 flash에서 pro로 바꾸기
+
+1,2번 기능은 성공했는데 3번은 실패했고, 4번은 2.5 pro가 무거워서 그런가 너무 오류가 많이 나는 느낌이라 2.5 flash로 다시 내려보았다.
+
+나중에 해커톤이 끝나면 더 자세하게 알아보고 수정을 해야겠다..
+
+#### PR 리뷰 자동화 (3호) 기능
+
+1. push 하면 PR 자동 생성
+2. assignees에 본인 이름 자동 생성
+3. PR 템플릿과 프롬포트를 활용한 자동 PR 작성
+4. Gemini PR Code Review를 통한 작업내용 요약과 Code Review
+5. issue와 연결된 branch에서 PR이 생성되었는지 판단해서 생성되었다면 PR 생성 및 작성 과정 Skip
+
+#### 사용 방법
+
+[자동 PR 생성 script](https://github.com/BusanHackathon/lighthouse-fe/blob/main/.github/workflows/auto-pr.yml)
+
+링크에 있는 코드를 추가하고, Github Token 과 Google AI Studio의 API key를 환경변수로 넣어주면 사용할 수 있다.
+
+branch 이름이나 Gemini 한테 PR 작성 요청하는 프롬포트는 적절하게 수정해서 사용하면 더 좋을 것 같다.

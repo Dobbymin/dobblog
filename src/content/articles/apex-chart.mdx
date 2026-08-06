@@ -1,0 +1,425 @@
+export const metadata = {
+  slug: 'apex-chart',
+  title: 'ApexCharts로 실시간 차트 그리기',
+  description: 'ApexCharts를 사용하여 실시간 차트를 그리는 방법을 알아보자!',
+  date: '2025-12-04',
+  readingTime: '7 min read',
+  tags: ['Project'],
+  headings: ['ApexCharts는 무엇일까?', '실시간 차트 구현하기'],
+};
+
+비트코인 가상 매매 프로젝트인 Dobbit에서 실시간 코인 차트를 구현해서 직접 Upbit 의 차트를 보지 않고, Dobbit 내에서 실시간으로 차트를 볼 수 있게 만들고 싶었다.
+
+처음에는 기존에 사용해보았고, 컴포넌트 기반이라 사용하기 편하다고 생각했던 Recharts 라이브러리를 사용해볼려고 했다. 하지만 Recharts 의 경우 OHLCV 데이터 시각화를 위한 전용 컴포넌트가 존재하지 않았고, 이를 위해 직접 커스텀하여 사용해야 했다. 내가 생각해봤을때 라이브러리를 사용하는 이유는 기능을 직접 구현하는 것 보다 간단하게 개발을 진행할 수 있어야 한다는 것이었는데, Recharts를 통해 커스텀해서 만들어내야한다면 이 라이브러리를 사용하는 이유가 없다고 생각했다.
+
+그래서 다른 라이브러리를 찾아보던 중 ApexChart 라는 라이브러리를 알게되었다. 이 라이브러리의 경우 Recharts에 비해 다양한 차트 종류를 지원하고, 주식 관련 차트 구현에도 자주 사용된다는 점에서 흥미로웠다. 따라서 이번 프로젝트에서는 Recharts 대신 ApexChart만 사용해서 기능구현을 진행해보았다.
+
+## ApexCharts는 무엇일까?
+
+[ApexCharts 공식 문서](https://apexcharts.com/features/)
+
+ApexCharts는 원하는 데이터를 시각화할 수 있도록 도와주는 오픈소스 차트 라이브러리라고 한다. 다양한 차트 타입, 인터랙션, 스타일 옵션 등을 갖춘 것이 특징이다. 특히, 내가 원하는 OHLCV 차트(캔들스틱 차트)도 지원하고 있어 주식이나 암호화폐 가격 변동을 시각화하는데 적합하다.
+
+### 사용 방법
+
+우선, 라이브러리를 설치하고, 공식문서의 Demo 페이지를 살펴보자.
+
+[ApexCharts Candlestick Chart Demo](https://apexcharts.com/react-chart-demos/candlestick-charts/combo/)
+
+```bash
+npm install react-apexcharts apexcharts
+```
+
+설치 후, React 컴포넌트에서 다음과 같이 사용하면 된다.
+
+```javascript
+const ApexChart = () => {
+  const [state, setState] = React.useState({
+    series: [
+      {
+        data: seriesData,
+      },
+    ],
+    options: {
+      chart: {
+        type: 'candlestick',
+        height: 290,
+        id: 'candles',
+        toolbar: {
+          autoSelected: 'pan',
+          show: false,
+        },
+        zoom: {
+          enabled: false,
+        },
+      },
+      plotOptions: {
+        candlestick: {
+          colors: {
+            upward: '#3C90EB',
+            downward: '#DF7D46',
+          },
+        },
+      },
+      xaxis: {
+        type: 'datetime',
+      },
+    },
+
+    seriesBar: [
+      {
+        name: 'volume',
+        data: seriesDataLinear,
+      },
+    ],
+    optionsBar: {
+      chart: {
+        height: 160,
+        type: 'bar',
+        brush: {
+          enabled: true,
+          target: 'candles',
+        },
+        selection: {
+          enabled: true,
+          xaxis: {
+            min: new Date('20 Jan 2017').getTime(),
+            max: new Date('10 Dec 2017').getTime(),
+          },
+          fill: {
+            color: '#ccc',
+            opacity: 0.4,
+          },
+          stroke: {
+            color: '#0D47A1',
+          },
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      plotOptions: {
+        bar: {
+          columnWidth: '80%',
+          colors: {
+            ranges: [
+              {
+                from: -1000,
+                to: 0,
+                color: '#F15B46',
+              },
+              {
+                from: 1,
+                to: 10000,
+                color: '#FEB019',
+              },
+            ],
+          },
+        },
+      },
+      stroke: {
+        width: 0,
+      },
+      xaxis: {
+        type: 'datetime',
+        axisBorder: {
+          offsetX: 13,
+        },
+      },
+      yaxis: {
+        labels: {
+          show: false,
+        },
+      },
+    },
+  });
+
+  return (
+    <div>
+      <div class='chart-box'>
+        <div id='chart-candlestick'>
+          <ReactApexChart
+            options={state.options}
+            series={state.series}
+            type='candlestick'
+            height={290}
+          />
+        </div>
+        <div id='chart-bar'>
+          <ReactApexChart
+            options={state.optionsBar}
+            series={state.seriesBar}
+            type='bar'
+            height={160}
+          />
+        </div>
+      </div>
+      <div id='html-dist'></div>
+    </div>
+  );
+};
+
+const domContainer = document.querySelector('#app');
+ReactDOM.render(<ApexChart />, domContainer);
+```
+
+이 코드를 통해 아래와 같은 차트를 그릴 수 있다.
+
+![apexchart-demo](/images/apex-chart/1.png)
+
+## 실시간 차트 구현하기
+
+### Next.js에서 SSR 이슈 해결 (Window is not defined)
+
+ApexCharts는 브라우저의 window 객체를 참조하여 차트를 그린다. 하지만 Next.js는 기본적으로 서버 사이드 렌더링(SSR)을 수행하기 때문에, 서버 환경에서 window를 찾지 못해 에러가 발생한다.
+
+이를 해결하기 위해 `next/dynamic`을 사용하여 SSR을 비활성화하고 클라이언트 측에서만 로드하도록 설정했다.
+
+```typescript
+'use client';
+
+import dynamic from 'next/dynamic';
+
+// ssr: false 옵션으로 서버 렌더링 제외
+const ReactApexChart = dynamic(() => import('react-apexcharts'), {
+  ssr: false,
+});
+```
+
+### 데이터 구조 변환
+
+이 프로젝트에서는 Upbit Open API 를 통해 코인 관련 데이터를 가져온다. 차트에서도 Upbit API 에서 제공하는 데이터를 살펴보았고, 응답값은 아래와 같았다.
+
+```json
+[
+  {
+    "market": "KRW-BTC",
+    "candle_date_time_utc": "2023-11-01T00:00:00",
+    "candle_date_time_kst": "2023-11-01T09:00:00",
+    "opening_price": 30000000,
+    "high_price": 31000000,
+    "low_price": 29000000,
+    "trade_price": 30500000,
+    "timestamp": 1698816000000,
+    "candle_acc_trade_price": 1500000000,
+    "candle_acc_trade_volume": 50,
+    "unit": 60
+  },
+  ...
+]
+```
+
+이 데이터에서 ApexCharts가 요구하는 데이터 형식으로 변환하는 과정이 필요하다.
+
+#### ApexCharts 요구 데이터
+
+- x: Timestamp (Number)
+- y: [Open, High, Low, Close] 배열
+
+#### Timezone 이슈 해결 (KST vs UTC)
+
+단순히 new Date(kstString)을 하면 브라우저가 로컬 시간으로 해석하고, ApexCharts는 이를 다시 UTC로 변환하여 표시하므로 **시간이 9시간 밀리는 현상이 발생** 한다. 이를 해결하기 위해 KST 시간 문자열 뒤에 `"Z"`를 붙여 강제로 UTC로 인식시켰다.
+
+```typeScript
+
+// KST 시간을 UTC로 취급하여 차트에 주입 ("Z" 추가)
+const parseKstToUtc = (kstString: string) => {
+return new Date(kstString + "Z").getTime();
+};
+```
+
+이렇게 하면 KST 시간이 올바르게 UTC로 변환되어 차트에 정확한 시간이 표시된다.
+
+#### `BTC/KRW` -> `KRW-BTC` 포맷팅
+
+프로젝트에서는 보기 편하게 BTC/KRW로 형식을 바꾸어 Store에 저장해둔 상태다. 하지만 Upbit API에서는 마켓명을 `KRW-BTC` 형식으로 요구한다. 따라서 전역 상태에서 가져온 `BTC/KRW` 형식을 변환하는 로직이 필요했다.
+
+```typescript
+export const formattedMarketName = (market: string | undefined): string => {
+  if (!market) {
+    return 'KRW-BTC'; // 기본값 설정
+  }
+
+  if (market.includes('/')) {
+    const [coin, currency] = market.split('/');
+    return `${currency}-${coin}`;
+  }
+
+  return market;
+};
+```
+
+#### 데이터 변환을 위한 custom hook 구현
+
+```typescript
+import { useGetCandle, useGetMarket } from '@/entities';
+
+export const useCoinChartViewModel = (count: number = 200) => {
+  const { market } = useGetMarket(); // 전역 상태에서 마켓 정보 가져오기 (예: BTC/KRW)
+
+  // 1. 마켓 이름 포맷팅 (BTC/KRW -> KRW-BTC)
+  let apiMarket = market || 'KRW-BTC';
+  if (market?.includes('/')) {
+    const [coin, currency] = market.split('/');
+    apiMarket = `${currency}-${coin}`;
+  }
+
+  // 2. 데이터 페칭
+  const { data: candleData, isLoading } = useGetCandle({
+    market: apiMarket,
+    count,
+  });
+
+  // 3. 데이터 변환 (정렬 및 매핑)
+  if (!candleData) return { prices: [], volume: [], isLoading };
+
+  const sortedData = [...candleData].sort(
+    (a, b) =>
+      new Date(a.candle_date_time_kst).getTime() -
+      new Date(b.candle_date_time_kst).getTime(),
+  );
+
+  const prices = sortedData.map((item) => ({
+    x: new Date(item.candle_date_time_kst + 'Z').getTime(),
+    y: [item.opening_price, item.high_price, item.low_price, item.trade_price],
+  }));
+
+  const volume = sortedData.map((item) => ({
+    x: new Date(item.candle_date_time_kst + 'Z').getTime(),
+    y: item.candle_acc_trade_volume.toFixed(3),
+  }));
+
+  return { prices, volume, isLoading };
+};
+```
+
+### 최종 차트 구현
+
+![Dobbit-chart](/images/apex-chart/2.png)
+
+뭔가 차트가 어색해보이지만, 기준이 초 단위로 되어있기 때문에 그렇다. 데이터도 잘 넘어오고 있고, `useQuery`의 `refetchInterval` 옵션을 사용하여 0.5초마다 데이터를 갱신하도록 설정했기 때문에 실시간 차트와 비슷하게 역할을 잘 수행하고 있다.
+
+#### 최종 코드
+
+```tsx
+'use client';
+
+import dynamic from 'next/dynamic';
+
+import { ApexOptions } from 'apexcharts';
+
+import { Skeleton } from '@/shared';
+
+import { useCoinChartViewModel } from '../../../hooks';
+
+// SSR 비활성화
+const ReactApexChart = dynamic(() => import('react-apexcharts'), {
+  ssr: false,
+});
+
+export const CoinChartDisplay = () => {
+  const { prices, volume, isLoading } = useCoinChartViewModel(50);
+
+  const candleOptions: ApexOptions = {
+    chart: {
+      type: 'candlestick',
+      id: 'candles',
+      toolbar: { autoSelected: 'pan', show: false },
+      zoom: { enabled: false },
+      background: 'transparent',
+    },
+    theme: { mode: 'dark' },
+    plotOptions: {
+      candlestick: {
+        colors: {
+          upward: 'var(--increase)',
+          downward: 'var(--decrease)', // 하락 (초록/파랑)
+        },
+      },
+    },
+    xaxis: {
+      type: 'datetime',
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+      labels: { show: true }, // 메인 차트 X축 라벨 보이기
+    },
+    yaxis: {
+      tooltip: { enabled: true },
+      labels: {
+        formatter: (val) => Math.floor(val).toLocaleString(),
+      },
+    },
+    grid: { borderColor: '#333' },
+  };
+
+  const barOptions: ApexOptions = {
+    chart: {
+      type: 'bar',
+      id: 'brush',
+      brush: {
+        enabled: true,
+        target: 'candles',
+      },
+      selection: {
+        enabled: true,
+        fill: { color: '#ccc', opacity: 0.4 },
+        stroke: { color: '#0D47A1' },
+        // 초기 선택 범위: 데이터의 마지막 20% 구간
+        xaxis: {
+          min: prices.length > 30 ? prices[prices.length - 30].x : undefined,
+          max: prices.length > 0 ? prices[prices.length - 1].x : undefined,
+        },
+      },
+      background: 'transparent',
+    },
+    theme: { mode: 'dark' },
+    dataLabels: { enabled: false },
+    plotOptions: {
+      bar: {
+        columnWidth: '100%',
+        colors: {
+          ranges: [{ from: 0, to: 1000000000, color: '#555' }], // 거래량 색상 통일
+        },
+      },
+    },
+    stroke: { width: 0 },
+    xaxis: {
+      type: 'datetime',
+      tooltip: { enabled: false },
+      axisBorder: { offsetX: 13 },
+    },
+    yaxis: { labels: { show: false } },
+    grid: { show: false },
+  };
+
+  if (isLoading) return <Skeleton className='h-[492px] w-full' />;
+
+  return (
+    <div className='bg-surface-dark w-full'>
+      <div id='chart-candlestick'>
+        <ReactApexChart
+          options={candleOptions}
+          series={[{ name: 'Price', data: prices }]}
+          type='candlestick'
+          height={300}
+          width='100%'
+        />
+      </div>
+
+      <div id='chart-bar'>
+        <ReactApexChart
+          options={barOptions}
+          series={[{ name: 'Volume', data: volume }]}
+          type='bar'
+          height={140}
+          width='100%'
+        />
+      </div>
+    </div>
+  );
+};
+```
+
+이후 1초, 1분, 5분, 30분 차트를 볼 수 있도록 API 코드를 수정하고, useState를 사용해서 차트 상태가 변경될 수 있도록 구현하면 완벽하게 차트가 구현된다!
+
+구현하고 나서 보니까 ApexCharts가 Recharts 보다 훨씬 사용하기 편한것 같다는 생각이 들었다. 물론 그만큼 무겁겠지만...

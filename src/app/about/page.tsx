@@ -32,13 +32,6 @@ export default function AboutPage() {
           >
             <Code2 size={19} /> GitHub <ArrowUpRight size={16} />
           </a>
-          <a
-            href={EXTERNAL_ROUTES_PATH.WIKI}
-            rel='noreferrer'
-            target='_blank'
-          >
-            Wiki <ArrowUpRight size={16} />
-          </a>
         </div>
         <section className='about-interests'>
           <p className='eyebrow'>Interests</p>

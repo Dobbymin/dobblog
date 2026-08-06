@@ -1,0 +1,63 @@
+export const metadata = {
+  slug: 'express-routes',
+  title: 'Express의 기본 라우팅',
+  description:
+    'Express 프레임워크를 사용하여 기본적인 라우팅을 설정하는 방법을 알아보자!',
+  date: '2025-12-01',
+  readingTime: '1 min read',
+  tags: ['Develop'],
+  headings: ['기본 라우팅'],
+};
+
+## 기본 라우팅
+
+### 라우팅
+
+**라우팅** 은 **URI(또는 경로)** 및 **특정한 HTTP 요청 메소드**(GET, POST 등)인 **특정 엔드포인트에 대한 클라이언트 요청에 애플리케이션이 응답**하는 방법을 결정하는 것을 말한다.
+
+각 라우트는 하나 이상의 핸들러 함수를 가질 수 있으며, 이러한 함수는 라우트가 일치할 때 실행된다.
+
+라우트 정의에는 다음과 같은 구조가 필요하다.
+
+```javascript
+app.METHOD(PATH, HANDLER);
+```
+
+- `app`은 express의 인스턴스
+- `METHOD`는 HTTP 요청 메소드 (GET, POST, PUT, DELETE 등)
+- `PATH`는 서버에서의 경로
+- `HANDLER`는 라우트가 일치할 때 실행되는 함수
+
+### 예시
+
+#### 1. 홈 페이지에서 Hello World!로 응답
+
+```javascript
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+```
+
+#### 2. 루트 경로 (`/`)에 대한 POST 요청에 응답
+
+```javascript
+app.post('/', (req, res) => {
+  res.send('Got a POST request');
+});
+```
+
+#### 3. `/user` 라우트에 대한 PUT 요청에 응답
+
+```javascript
+app.put('/user', (req, res) => {
+  res.send('Got a PUT request at /user');
+});
+```
+
+#### 4. `/user` 라우트에 대한 DELETE 요청에 응답
+
+```javascript
+app.delete('/user', (req, res) => {
+  res.send('Got a DELETE request at /user');
+});
+```

@@ -1,0 +1,236 @@
+export const metadata = {
+  slug: 'database-basic',
+  title: 'Database 공부하기 (1)',
+  description: 'Database 에서 기본적인 SQL 문법과 개념들을 알아보자!',
+  date: '2026-01-13',
+  readingTime: '5 min read',
+  tags: ['Database'],
+  headings: [
+    '1. 테이블 생성시 제약 넣기',
+    '2. 자료형',
+    '3. 기본키, 고유키, 그리고 외래키',
+  ],
+};
+
+## 1. 테이블 생성시 제약 넣기
+
+```sql
+CREATE TABLE people (
+  person_id INT AUTO_INCREMENT PRIMARY KEY,
+  person_name VARCHAR(10) NOT NULL,
+  nickname VARCHAR(10) UNIQUE NOT NULL,
+  age TINYINT UNSIGNED,
+  is_married TINYINT DEFAULT 0
+);
+```
+
+- AUTO_INCREMENT : 새 행 생성시마다 자동으로 1씩 증가
+- PRIMARY KEY : 중복 입력 불가, NULL (빈 값) 불가
+- UNIQUE : 중복 입력 불가
+- NOT NULL : NULL(빈 값) 입력 불가
+- UNSIGNED : (숫자일시) 양수만 가능
+- DEFAULT : 값 입력이 없을 시 기본값
+
+### 💡 PRIMARY KEY (기본키)
+
+- 테이블마다 하나만 가능
+- 기본적으로 인덱스 생성 (기본키 행 기준으로 빠른 검색 가능)
+- ⭐ 각 행을 고유하게 식별 가능 - 테이블마다 하나씩 둘 것
+
+## 2. 자료형
+
+### 01. 숫자 자료형
+
+#### 정수
+
+| **자료형**    | **바이트** | **SIGNED**                     | **UNSIGNED**      |
+| ------------- | ---------- | ------------------------------ | ----------------- |
+| **TINYINT**   | 1          | -128 ~ 127                     | 0 ~ 255           |
+| **SMALLINT**  | 2          | -32,768 ~ 32,767               | 0 ~ 65,535        |
+| **MEDIUMINT** | 3          | -8,388,608 ~ 8,388,607         | 0 ~ 16,777,215    |
+| **INT**       | 4          | -2,147,483,648 ~ 2,147,483,647 | 0 ~ 4,294,967,295 |
+| **BIGINT**    | 8          | -2^63 ~ 2^63 - 1               | 0 ~ 2^64 - 1      |
+
+#### 고정 소수점(Fixed Point) 수
+
+- 좁은 범위의 수 표현 가능, 정확한 값
+
+| **자료형**        | **설명**                                          | **범위**  |
+| ----------------- | ------------------------------------------------- | --------- |
+| **DECIMAL**(s, d) | 실수 부분 총 자릿수( s ) & 소수 부분 자릿수 ( d ) | s 최대 65 |
+
+#### 부동 소수점(Floating Point) 수
+
+- 넓은 범위의 수 표현 가능, 정확하지 않은 값 (일반적으로 충분히 정확)
+
+| **자료형** | **표현 범위**                                                    |
+| ---------- | ---------------------------------------------------------------- |
+| **FLOAT**  | -3.402...E+38 ~ -1.175...E-38 , 0 , 1.175...E-38 ~ 3.402...E+38  |
+| **DOUBLE** | -1.797...E+308 ~ -2.225E-308 , 0 , 2.225...E-308 ~ 1.797...E+308 |
+
+### 02. 문자 자료형
+
+#### 문자열
+
+- Storage Required
+  | **Value** | **`CHAR(4)`** | **Storage Required** | **`VARCHAR(4)`** | **Storage Required** |
+  | ---------------- | ------------- | -------------------- | ---------------- | -------------------- |
+  | **`''`** | `'    '` | 4 bytes | `''` | 1 byte |
+  | **`'ab'`** | `'ab  '` | 4 bytes | `'ab'` | 3 bytes |
+  | **`'abcd'`** | `'abcd'` | 4 bytes | `'abcd'` | 5 bytes |
+  | **`'abcdefgh'`** | `'abcd'` | 4 bytes | `'abcd'` | 5 bytes |
+
+| **자료형**     | **설명**                                | **차지하는 바이트**                     | **최대 바이트** |
+| -------------- | --------------------------------------- | --------------------------------------- | --------------- |
+| **CHAR**(s)    | 고정 사이즈 (남는 글자 스페이스로 채움) | s(고정값)                               | 255             |
+| **VARCHAR**(s) | 가변 사이즈                             | 실제 글자 수 [최대 s] + 1 [글자수 정보] | 65,535          |
+
+- 검색시 CHAR가 더 빠름
+- VARCHAR 칼럼 길이값이 **4글자** 보다 적을 경우 CHAR로 자동 변환
+
+#### 텍스트
+
+| **자료형**     | **최대 바이트 크기** |
+| -------------- | -------------------- |
+| **TINYTEXT**   | 255                  |
+| **TEXT**       | 65,535               |
+| **MEDIUMTEXT** | 16,777,215           |
+| **LONGTEXT**   | 4,294,967,295        |
+
+### 03. 시간 자료형
+
+| **자료형**    | **설명**            | **비고**                                       |
+| ------------- | ------------------- | ---------------------------------------------- |
+| **DATE**      | YYYY-MM-DD          |                                                |
+| **TIME**      | HHH:MI:SS           | HHH: -838 ~ 838까지의 시간                     |
+| **DATETIME**  | YYYY-MM-DD HH:MI:SS | 입력된 시간을 그 값 자체로 저장                |
+| **TIMESTAMP** | YYYY-MM-DD HH:MI:SS | MySQL이 설치된 컴퓨터의 시간대를 기준으로 저장 |
+
+- 시간 데이터를 가감없이 기록할 때 **DATETIME**
+- 시간 자동기록, 국제적인 서비스를 할 경우 **TIMESTAMP** 사용
+
+## 3. 기본키, 고유키, 그리고 외래키
+
+### 01. 기본키(Primary Key) 더 알기
+
+- 중복되지 않는 고유값만 허용
+- NULL 값 허용하지 않음
+- 테이블 당 **하나의 기본키만** 지정가능
+
+```sql
+-- 기본키 넣는 방법 1
+CREATE TABLE people (
+  first_name CHAR(2) PRIMARY KEY,
+  last_name CHAR(3),
+  nickname VARCHAR(10)
+);
+
+-- 기본키 넣는 방법 2
+CREATE TABLE people (
+  first_name CHAR(2),
+  last_name CHAR(3),
+  nickname VARCHAR(10),
+  PRIMARY KEY (first_name)
+);
+```
+
+#### 기본 키 변경하기
+
+```sql
+ALTER TABLE people DROP PRIMARY KEY;
+
+ALTER TABLE people DROP PRIMARY KEY (last_name);
+```
+
+#### **다중 기본키**
+
+```sql
+CREATE TABLE people (
+  first_name CHAR(2),
+  last_name CHAR(3),
+  nickname VARCHAR(10),
+  PRIMARY KEY (first_name, last_name)
+);
+```
+
+```sql
+INSERT INTO PEOPLE VALUES('홍', '길동', '별명');
+
+INSERT INTO PEOPLE VALUES('전', '우치', '별명');
+
+INSERT INTO PEOPLE VALUES('전', '길동', '별명');
+
+INSERT INTO PEOPLE VALUES('홍', '우치', '별명');
+
+INSERT INTO PEOPLE VALUES('홍', '길동', '별명');
+
+INSERT INTO PEOPLE VALUES('전', '우치', '별명');
+```
+
+### 02. 고유키(Unique) 더 알기
+
+- 중복 제한, NULL 값 가능
+
+```sql
+-- 고유키 넣는 방법 1
+CREATE TABLE people (
+  person_id INT AUTO_INCREMENT PRIMARY KEY,
+  first_name CHAR(2) UNIQUE,
+  last_name CHAR(3)
+);
+
+-- 고유키 넣는 방법 2
+CREATE TABLE people (
+  person_id INT AUTO_INCREMENT PRIMARY KEY,
+  first_name CHAR(2),
+  last_name CHAR(3),
+  UNIQUE (first_name)
+);
+
+-- 다중 고유키
+CREATE TABLE people (
+  person_id INT AUTO_INCREMENT PRIMARY KEY,
+  first_name CHAR(2),
+  last_name CHAR(3),
+  UNIQUE (first_name, last_name)
+);
+```
+
+### 03. 외래키
+
+#### 외래 키 추가하기
+
+```sql
+ALTER TABLE _자식테이블명
+  ADD CONSTRAINT _제약명
+  FOREIGN KEY ( _자식테이블외래키 )
+  REFERENCES 부모테이블명 ( _부모테이블기본키 )
+  -- ON DELETE _삭제시제약
+  -- ON UPDATE _수정시제약
+```
+
+#### 외래 키 삭제하기
+
+```sql
+ALTER TABLE _자식테이블명 DROP FOREIGN KEY _자식테이블외래키
+```
+
+💡 외래키는 **NULL**값이거나 또는 **부모 테이블의 기본 키**값과 같아야한다.
+
+#### 외래 키 제약
+
+| **제약**                     | **설명**                                               | **비고**                              |
+| ---------------------------- | ------------------------------------------------------ | ------------------------------------- |
+| **NO ACTION** / **RESTRICT** | 자식 테이블에 해당 외래키가 있을 때 수정/삭제되지 않음 | -                                     |
+| **CASCADE**                  | 자식 테이블의 해당 행도 수정/삭제                      | -                                     |
+| **SET NULL**                 | 자식 테이블의 외래키를 NULL로                          | 자식 외래키가 NOT NULL일 시 설정 불가 |
+| **SET DEFAULT**              | 자식 테이블의 외래키를 기본값으로                      | InnoDB 엔진에서 사용 불가             |
+
+#### 출처
+
+[갖고노는 MySQL 데이터베이스 by 얄코](https://www.inflearn.com/course/%EC%96%84%EC%BD%94-%EB%A7%88%EC%9D%B4%EC%97%90%EC%8A%A4%ED%81%90%EC%97%98)
+
+<YouTube
+  videoId='dgpBXNa9vJc'
+  alt='왕초보용! 갖고 노는 MySQL 데이터베이스 강좌'
+/>

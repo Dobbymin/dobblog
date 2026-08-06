@@ -1,0 +1,234 @@
+export const metadata = {
+  slug: 'zustand-middleware',
+  title: '너는 zustand를 잘 쓰고있니?',
+  description: 'zustand 에 대해 더 자세히 알아보자!',
+  date: '2025-11-01',
+  readingTime: '5 min read',
+  tags: ['Develop'],
+  headings: ['1. 압도적인 번들 사이즈', '2. 미들웨어'],
+};
+
+React 관련 강의를 듣다가 상태관리 라이브러리로 zustand가 나오길래, 어느정도 쓸 줄 안다고 생각해서 대충 눈으로만 보고 있다가 생각보다 내가 zustand가 어떤 친구인지 전혀 모르고 있다는 사실을 알게되었다.
+
+처음에는 그냥 이렇게 생각했다.
+
+> 1. Redux 와 같은 Flux 패턴의 상태관리 라이브러리
+> 2. Redux에 비해 Boilerplate가 적고 코드 양이 압도적으로 적음
+> 3. Context API 와 비교했을 때 컴포넌트 리렌더링이 적음
+> 4. 코드가 직관적이라서 러닝커브가 매우 낮음! ~~개쉬움~~
+
+그래서 그냥 `상태관리 라이브러리 === Zustand` 라고 생각해서 **주짱탄드!!** 라고 감탄하면서 별 생각없이 사용하고 있었는데, 강의를 듣다보니 내가 모르는 기능들이 참말로 많았다..
+
+일단 로고가 귀엽잖아???
+
+![Zustand 로고](/thumbnail/zustand-middleware.webp)
+
+## 1. 압도적인 번들 사이즈
+
+우선 zustand의 경우 다른 상태관리 라이브러리들에 비해 번들사이즈가 매우 작다.
+
+![상태관리 라이브러리 번들사이즈 비교 그래프](/images/zustand-middleware-1.png)
+
+조만간 Redux 따라잡겠당 ㅎㅎ
+
+![상태관리 라이브러리 번들사이즈 비교 표](/images/zustand-middleware-2.png)
+
+아무튼 다른 상태관리 라이브리리들과 비교해보았을때 zustand의 번들사이즈가 압도적으로 작다는 것을 알 수 있었다.
+
+생각보다 recoil의 번들사이즈가 엄청 크다는 점도 신기했다.
+
+## 2. 미들웨어
+
+zustand에서는 Middleware를 지원한다. 나는 이전에 zustand persist랑 devtools 만 사용해보았는데, combine, immer, subscribeWithSelector 등 다양한 미들웨어가 존재한다고 한다.
+
+그럼 사용해본 persist, devtools 말고 다른 미들웨어들도 한 번 살펴보자!
+
+### 상태의 타입 추론 (combine)
+
+Typescript를 사용할 때, 상태 타입을 직접 작성하지 않고 추론하도록 `combine` 미들웨어를 사용할 수 있다.
+
+`combine` 미들웨어는 첫 번째 인수로 추론할 상태를 받고, 두 번째 인수로 `set`, `get` 매개변수를 포함하는 액션 함수를 받는다.
+
+#### AS-IS
+
+```typescript
+import { create } from 'zustand';
+
+interface Store {
+  count: number;
+  actions: {
+    increase: () => void;
+    decrease: () => void;
+  };
+}
+
+export const useCounterStore = create<Store>((set, get) => ({
+  count: 0,
+  actions: {
+    increase: () => {
+      set((store) => ({
+        count: store.count + 1,
+      }));
+    },
+    decrease: () => {
+      set((store) => ({
+        count: store.count - 1,
+      }));
+    },
+  },
+}));
+
+export const useCount = () => {
+  const count = useCounterStore((state) => state.count);
+  return count;
+};
+
+export const useIncreaseCount = () => {
+  const increase = useCounterStore((state) => state.actions.increase);
+  return increase;
+};
+
+export const useDecreaseCount = () => {
+  const decrease = useCounterStore((state) => state.actions.decrease);
+  return decrease;
+};
+```
+
+#### TO-BE
+
+```typescript
+import { create } from 'zustand';
+import { combine } from 'zustand/middleware';
+
+export const useCounterStore = create(
+  combine({ count: 0 }, (set, get) => ({
+    actions: {
+      increase: () => {
+        set((store) => ({
+          count: store.count + 1,
+        }));
+      },
+      decrease: () => {
+        set((store) => ({
+          count: store.count - 1,
+        }));
+      },
+    },
+  })),
+);
+```
+
+이렇게 `combine` 미들웨어를 사용하면 상태 타입을 직접 작성하지 않아도 알아서 추론해준다고 한다.
+
+이 코드에서는 `count` 상태의 타입이 `number`로 추론되고, `actions` 객체 안에 있는 메서드들도 올바르게 타입이 지정된다.
+
+### 불변성 유지 (Immer)
+
+Immer는 불변성을 유지하면서 상태를 변경할 수 있게 해주는 라이브러리이다.
+
+#### AS-IS
+
+```typescript
+import { create } from 'zustand';
+import { combine } from 'zustand/middleware';
+
+export const useCounterStore = create(
+  combine({ count: 0 }, (set, get) => ({
+    actions: {
+      increase: () => {
+        set((store) => ({
+          count: store.count + 1,
+        }));
+      },
+      decrease: () => {
+        set((store) => ({
+          count: store.count - 1,
+        }));
+      },
+    },
+  })),
+);
+```
+
+#### TO-BE
+
+```typescript
+import { create } from 'zustand';
+import { combine } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
+
+export const useCounterStore = create(
+  immer(
+    combine({ count: 0 }, (set, get) => ({
+      actions: {
+        increase: () => {
+          set((state) => {
+            state.count += 1;
+          });
+        },
+        decrease: () => {
+          set((state) => {
+            state.count -= 1;
+          });
+        },
+      },
+    })),
+  ),
+);
+```
+
+이렇게 `immer` 미들웨어를 사용하면 `set` 함수 안에서 상태를 직접 변경하는 것처럼 작성할 수 있다. Immer가 내부적으로 불변성을 유지하면서 상태를 변경해준다.
+
+### 상태 구독 (subscribeWithSelector)
+
+selector 함수를 토해서 스토어의 특정 값을 구독함으로써 해당 값이 변경될 때마다 어떠한 기능을 추가로 수행하도록 만들어주는 마치 리액트의 `useEffect` 와 비슷한 기능을 수행하는 Middleware 이다.
+
+```typescript
+import { create } from 'zustand';
+import { combine } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
+import { subscribeWithSelector } from 'zustand/middleware/subscribeWithSelector';
+
+export const useCounterStore = create(
+  subscribeWithSelector(
+    immer(
+      combine({ count: 0 }, (set, get) => ({
+        actions: {
+          increase: () => {
+            set((state) => {
+              state.count += 1;
+            });
+          },
+          decrease: () => {
+            set((state) => {
+              state.count -= 1;
+            });
+          },
+        },
+      })),
+    ),
+  ),
+);
+
+useCounterStore.subscribe(
+  // store의 count 값을 구독
+  (store) => store.count,
+  // count 값이 변경될 때마다 호출되는 콜백 함수 -> listener
+  (count, prevCount) => {
+    console.log(count, prevCount);
+
+    // 현재 store 상태 가져오기
+    const store = useCounterStore.getState();
+  },
+);
+```
+
+이렇게 `subscribeWithSelector` 미들웨어를 사용하면 특정 상태 값을 구독하고, 해당 값이 변경될 때마다 콜백 함수를 실행할 수 있다. 이 기능은 상태 변경에 따른 부수 효과를 처리하는 데 유용하다.
+
+#### 정리
+
+이때까지 zustand를 쓰면서 '리렌더링' 에 대해 크게 신경을 쓰지 않은 것 같다. 항상 store를 생성하고, 그 값을 전부 가져와서 사용했는데, 커스텀 훅을 만들어서 원하는 값만 가져오도록 하여 리렌더링을 줄이는 방법은 처음 알게되었다.
+
+또한, combine, immer, subscribeWithSelector 미들웨어를 통해 상태 타입 추론, 중첩된 객체 변경, 상태 구독 등의 기능을 활용할 수 있다는 점도 매우 유용하다고 생각된다.
+
+앞으로는 zustand를 좀 더 zustand 답게 사용하면서, 라이브러리 사용에 대한 타당성에 대해 고민하며 코드를 작성하도록 노력해야겠다!

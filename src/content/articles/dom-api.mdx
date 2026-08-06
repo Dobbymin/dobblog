@@ -1,0 +1,134 @@
+export const metadata = {
+  slug: 'dom-api',
+  title: 'DOM 조작하기',
+  description:
+    'DOM과 DOM API를 이해하고, 자바스크립트로 웹 요소를 조작하는 방법을 알아보자!',
+  date: '2025-10-12',
+  readingTime: '3 min read',
+  tags: ['Develop'],
+  headings: ['📌 DOM 이란?', '📌 DOM API 란?'],
+};
+
+## 📌 DOM 이란?
+
+DOM이란 Document Object Model 문서 객체 모델로, HTML로 작성된 여러 요소들에 Javascript가 접근할 수 있도록 브라우저가 변환시킨 객체이다.
+
+쉽게 말해 브라우저입장에서 우리가 작성한 HTML을 Javascript가 이해하고 조작할 수 있도록 **객체로 변환**한 것이다.
+
+웹 부라우저는 이 HTML 문서를 불러온 이후, 상하 관계를 한 눈에 볼 수 있는 트리 구조로 나타내는데, 이를 **DOM Tree** 라고 한다.
+
+![](https://velog.velcdn.com/images/dobby_min/post/93ed48b3-5810-46dc-85dc-08e9d3d5c1b6/image.png)
+
+## 📌 DOM API 란?
+
+DOM이란 HTML로 작성된 여러 요소들에 Javascript 가 접근할 수 있도록 브라우저가 변환시킨 객체이고, Javascript는 이러한 DOM을 통해 HTML로 짜여진 요소들을 생성, 수정, 삭제할 수 있다.
+
+또한 DOM은 Javascript 가 자신에게 접근하여 DOM을 조작하고 수정할 수 있는 방법인 DOM API를 제공하기 때문에 Javascript 는 이를 활용해 웹 요소들을 생성하고 수정하고 삭제할 수 있다.
+
+DOM 요소를 조작하는 과정은 항상 3단계를 거친다.
+
+1. **찾기(Selection)**: 조작하고 싶은 HTML 요소를 찾는다.
+2. **선택(Targeting)**: 찾은 요소를 변수에 담아 선택한다.
+3. **조작(Manipulation)**: 선택한 요소의 속성, 내용, 스타일 등을 변경한다.
+
+### 🍀 원하는 요소 찾기 및 선택방법
+
+DOM API를 사용해 요소를 찾을 때는, 항상 모든 것의 시작점인 `document` 객체에서부터 시작한다.
+
+#### 단일 요소 선택 (하나만 찾기)
+
+**`document.getElementById('id이름')`**
+
+- 가장 빠르고 고전적인 방법. 고유한 `id` 속성 값으로 요소를 찾는다.
+- `id`는 문서에서 유일해야 하므로, 항상 하나의 요소만 반환한다.
+
+```tsx
+// id가 "color"인 요소를 찾아서 $color 변수에 담는다.
+const $color = document.getElementById('color');
+console.log($color); // <div id="color">...</div>
+```
+
+**`document.querySelector('CSS 선택자')`**
+
+- `id`, `class`, `태그 이름` 등 **CSS 선택자 문법**을 그대로 사용해서 요소를 찾는다.
+- 조건을 만족하는 요소가 여러 개라도, **가장 첫 번째 요소 하나만** 반환한다.
+
+```jsx
+// class가 "animal-info"인 div 요소를 찾는다.
+const $animalInfo = document.querySelector('div.animal-info');
+
+// id가 "age"인 div 요소를 찾는다.
+const $age = document.querySelector('div#age');
+```
+
+#### 여러 요소 선택 (조건에 맞는 것 모두 찾기)
+
+**`document.querySelectorAll('CSS 선택자')`**
+
+- `querySelector`와 문법은 같지만, 조건을 만족하는 **모든 요소를 `NodeList`라는 배열과 유사한 객체**에 담아 반환한다.
+
+**`document.getElementsByClassName('클래스이름')`**
+
+- 주어진 `class` 이름을 가진 모든 요소를 `HTMLCollection`에 담아 반환한다.
+
+**`document.getElementsByTagName('태그이름')`**
+
+- 주어진 `태그 이름`(예: 'div', 'p')을 가진 모든 요소를 `HTMLCollection`에 담아 반환한다.
+
+```jsx
+// class가 "info-item"인 모든 div 요소를 찾는다.
+const $infoItems = document.querySelectorAll('div.info-item');
+console.log($infoItems); // NodeList [div, div, div]
+```
+
+#### 요소 조작하기: 찾은 요소 변신시키기
+
+원하는 요소를 성공적으로 선택했다면, 이제 그 요소의 다양한 속성을 변경할 수 있다.
+
+**`element.className`** / **`element.id`**
+
+- 선택한 요소의 `class`나 `id` 속성 값을 **통째로 바꾸거나** 읽어온다.
+
+```jsx
+const $name = document.getElementById('name');
+$name.className = 'dog-name'; // class를 'dog-name'으로 변경
+console.log($name.className); // "dog-name"
+```
+
+**`element.classList`**
+
+- `className`보다 더 편리하게 클래스를 조작할 수 있는 메서드를 제공한다.
+  - **.add('클래스')**: 클래스를 추가한다.
+  - **.remove('클래스')**: 클래스를 제거한다.
+  - **.toggle('클래스')**: 클래스가 있으면 제거하고, 없으면 추가한다.
+
+```jsx
+const $color = document.getElementById('color');
+$color.classList.add('dog-color'); // 'dog-color' 클래스 추가
+$color.classList.remove('info-item'); // 'info-item' 클래스 제거
+```
+
+**`element.textContent`**
+
+- 요소 내부의 **텍스트 내용**을 바꾸거나 읽어온다.
+
+```jsx
+const $age = document.getElementById('age');
+$age.textContent = '5살'; // 텍스트를 '5살'로 변경
+```
+
+**`element.style`**
+
+- 요소의 인라인 스타일을 직접 조작할 수 있다. CSS 속성 이름은 카멜 케이스(`camelCase`)로 작성해야 한다. (예: `font-size` → `fontSize`)
+
+```jsx
+const $color = document.getElementById('color');
+$color.style.color = 'blue';
+$color.style.fontSize = '30px';
+```
+
+#### 자료 출처
+
+[한 번에 끝내는 자바스크립트: 바닐라 자바스크립트로 SPA 개발까지](https://inf.run/A4YY7)
+
+[DOM과 DOM API](https://velog.io/@hbin12212/DOM-API-1)

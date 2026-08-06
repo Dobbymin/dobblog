@@ -1,0 +1,55 @@
+export const metadata = {
+  slug: 'ssr-vs-csr',
+  title: 'SSR vs CSR',
+  description: 'Next.js 공부를 하기 전에 SSR과 CSR에 대해 비교해보자!',
+  date: '2025-08-29',
+  readingTime: '1 min read',
+  tags: ['Develop'],
+  headings: ['서버사이드 렌더링과 클라이언트 사이드 렌더링'],
+};
+
+## 서버사이드 렌더링과 클라이언트 사이드 렌더링
+
+React의 프레임워크인 Next.js의 가장 중요한 기능은 **서버 사이드 렌더링(Server Side Rendering, SSR)** 으로 대표되는 **사전 렌더링(Pre Rendering)** 기능이다.
+
+Next.js의 사전 렌더링에 관심이 많은 이유는 리액트의 경우 해당 기능을 제공하지 않기 때문이다.
+
+### 리액트의 클라이언트 사이드 렌더링
+
+리액트는 기본적으로 클라이언트 사이드 렌더링 (Client Side Rendering, CSR) 방식으로 페이지를 브라우저에 렌더링한다. CSR 방식은 페이지 이동이 빠르다는 장점이 있지만, 초기 접속 속도가 늦어지는 문제가 있다.
+
+#### 초기 접속 시
+
+![](/images/ssr-vs-csr/1.png)
+
+#### 페이지 이동 시
+
+![](/images/ssr-vs-csr/2.png)
+
+### FCP (First Contentful Paint)
+
+사용자에게 처음 페이지의 콘텐츠를 렌더링 하는 시점
+
+FCP는 빨라야하며, 구글에서는 FCP를 1.8초 미만으로 유지하라고 제안한다.
+
+![](/images/ssr-vs-csr/3.png)
+
+### Next.js의 사전 렌더링
+
+Next.js는 리액트의 이런 문제점을 극복하기 위해 사전 렌더링(Pre Rendering)이라는 기능을 도입한다.
+
+#### 사전 렌더링
+
+웹 서버에서 미리 자바스크립트 코드를 실행해 개발자가 만든 컴포넌트를 HTML 페이지로 렌더링하는 것을 말한다.
+
+![](/images/ssr-vs-csr/4.png)
+
+#### 페이지 이동
+
+Next.js의 사전 렌더링 기능은 CSR의 문제점이었던 느린 FCP를 해결하면서도 장점인 빠른 페이지 이동은 계승한다.
+
+![](/images/ssr-vs-csr/5.png)
+
+#### 출처
+
+[한 입 크기로 잘라먹는 Next.js](https://product.kyobobook.co.kr/detail/S000217191723)

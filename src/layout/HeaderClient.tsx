@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { MobileNav, SearchOverlay, ThemeToggle } from '@/components';
 import { Button } from '@/components/ui';
-import { EXTERNAL_ROUTES_PATH, ROUTES_PATH } from '@/constants';
+import { ROUTES_PATH } from '@/constants';
 import type { PostMetadata } from '@/lib/posts';
 import { Rss, Search } from 'lucide-react';
 
@@ -64,25 +64,18 @@ export const HeaderClient = ({ searchPosts, variant }: HeaderClientProps) => {
       >
         <div className='site-shell site-header-inner'>
           <Link
-            aria-label='dobbymin 개발 블로그 홈'
+            aria-label='dobby_min 개발 블로그 홈'
             className='wordmark'
             href={ROUTES_PATH.HOME}
             transitionTypes={
               variant === 'article' ? ['article-back'] : undefined
             }
           >
-            dobbymin<span>’s</span>
+            dobby_min
           </Link>
           <nav aria-label='주요 내비게이션' className='desktop-nav'>
             <Link href={ROUTES_PATH.ARTICLES}>Articles</Link>
             <Link href={ROUTES_PATH.ABOUT}>About</Link>
-            <a
-              href={EXTERNAL_ROUTES_PATH.WIKI}
-              rel='noreferrer'
-              target='_blank'
-            >
-              Wiki
-            </a>
           </nav>
           <div className='header-actions'>
             <Button

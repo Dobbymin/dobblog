@@ -1,0 +1,129 @@
+export const metadata = {
+  slug: 'efficient-token-management',
+  title: '효율적인 토큰 관리 방법',
+  description:
+    'Clip project에서의 사용했던 효율적인 토큰 관리 방법에 대해 알아보자!',
+  date: '2025-08-10',
+  readingTime: '3 min read',
+  tags: ['Project'],
+  headings: ['문제 상황', '토큰 관리하기'],
+};
+
+새로운 프로젝트를 진행하면서 JWT를 활용한 인증 방식을 도입하기로 했다. 보안을 최우선으로 고려하여 Access Token과 Refresh Token을 모두 `HttpOnly` 쿠키에 담아 서버와 통신하는 방식을 선택했다.
+
+하지만 클라이언트에서 토큰을 못 꺼내서 약간의 이슈가 발생하게 되었다.
+
+## 문제 상황
+
+### 페이지 이동 (현재)
+
+메인 페이지 → 로그인 / 회원가입 페이지 (임시로 버튼 눌러서 이동) → 다시 메인페이지
+
+#### 문제점
+
+`HttpOnly` 쿠키는 스크립트 접근을 막아 XSS 공격으로부터 토큰을 안전하게 보호하는 가장 강력한 방법이다.
+
+하지만 이는 **클라이언트(브라우저)의 JavaScript 코드 역시 토큰의 존재 여부를 알 수 없다**는 것을 의미한다.
+
+이 때문에 다음과 같은 문제가 발생했다.
+
+1. 사용자가 서비스에 처음 접속하면, 클라이언트는 로그인 상태인지 아닌지 판단할 근거가 없다.
+
+2. 일단 메인 페이지의 API를 호출해본다.
+
+3. 서버는 쿠키가 없는 것을 확인하고 `401 Unauthorized` 에러를 반환한다.
+
+4. 클라이언트는 그제서야 사용자가 로그아웃 상태임을 인지하고, UI를 비정상적으로 보여주거나 에러를 표시한다.
+
+이처럼 API 요청이 실패한 후에야 로그인 상태를 파악하는 방식은 매우 비효율적이고, 사용자에게 좋지 않은 경험을 제공한다.
+
+이 문제를 해결하기 위해, 로그인 성공 시 서버로부터 받은 `nickname`을 `localStorage`에 저장하고, 페이지에 접근할 때마다 쿠키와 `localStorage`의 `nickname` 유무를 함께 검사하는 방식을 구상했다.
+
+### 개선방법 1
+
+![](/images/efficient-token-management/1.png)
+
+### 개선방법 2
+
+![](/images/efficient-token-management/2.png)
+
+나는 이 두가지 개선 방법 중에서 2번째 개선방법을 도입해서 문제를 해결할려고 했다. 그러던 중 또다른 이슈가 생겼다.
+
+> 🤔 "그럼 api 요청은 불가능 하더라도 nickname을 임의로 끼워넣으면 protect page는 뚫리지 않을까?"
+
+그렇게 해서 토큰 관리 방법을 몇가지 더 찾아보고 정리해보았다.
+
+## 토큰 관리하기
+
+#### **AccessToken**
+
+실제 API를 호출할 때마다 사용하는, 수명이 아주 짧은(15분~1시간) 토큰.
+
+#### **RefreshToken**
+
+오직 새로운 `AccessToken`을 발급받을 때만 사용하는, 아주 중요하고 수명이 긴 토큰
+
+### 1. 모든 토큰을 `HttpOnly` 쿠키로 주고받기
+
+#### **장점**
+
+- **가장 안전하다.**
+- `HttpOnly` 속성 때문에 자바스크립트 코드로 쿠키에 접근할 수 없으므로, **XSS(Cross-Site Scripting) 공격**으로부터 토큰을 완벽하게 보호할 수 있다.
+
+#### **단점**
+
+- **사용자 경험(UX)이 나쁘다.**
+- 클라이언트는 토큰의 존재 여부를 알 수 없어서, 로그인 상태인지 아닌지 판단하려면 항상 서버에 API 요청을 보내봐야만 알 수 있다.
+
+나중에 알아보니 서버측에서는 쿠키를 열어서 어떤 토큰이 없는지 조회할 수 있고, `AccessToken` 의 존재에 따라 다시 토큰을 담아서 보내줄 수 있는 방법이 있다고는 한다.
+
+### 2. AccessToken은 localStorage, RefreshToken은 쿠키에 저장
+
+#### **장점**
+
+- **UX가 개선된다.**
+- `localStorage`에 있는 `AccessToken`의 존재 여부만으로 "일단 로그인된 사용자"라고 판단하고 UI를 보여줄 수 있다.
+- API를 호출할 때도 `localStorage`에서 토큰을 꺼내 헤더에 쉽게 추가할 수 있다.
+
+#### **단점**
+
+- **치명적인 XSS 보안 취약점이 생긴다.**
+- `localStorage`는 자바스크립트로 아주 쉽게 접근할 수 있다.
+- 만약 악의적인 스크립트가 사이트에 주입되면, 그 스크립트는 `localStorage`를 통째로 읽어서 `AccessToken`을 탈취할 수 있다.
+
+### **3.** RefreshToken은 쿠키, AccessToken은 메모리에
+
+#### 01. RefreshToken : HttpOnly 쿠키에 저장
+
+- `HttpOnly` 쿠키에 저장해서 XSS 공격으로부터 완벽하게 보호해야 한다.
+- 브라우저는 토큰 갱신 API를 호출할 때만 이 쿠키를 자동으로 실어 보내게 된다.
+
+#### 02. AccessToken : React 상태(메모리)에 저장
+
+- `localStorage`보다 메모리에 저장하는 것이 훨씬 안전하다.
+- 자바스크립트 변수(예: `Zustand` 스토어, `Context API` 상태)에 저장된 토큰은 **페이지를 새로고침하면 그냥 사라져버린다.**
+- 따라서 XSS 공격으로 탈취되더라도 피해를 최소화할 수 있다.
+
+> 🤔 "새로고침하면 `AccessToken`이 사라지는데, 그럼 어떻게 로그인 상태를 유지하지?"
+
+1. 사용자가 페이지를 새로고침하거나, 앱에 처음 진입한다.
+2. `AccessToken`은 메모리에 없으니, 일단 로그아웃 상태처럼 보인다.
+3. 하지만 앱은 로딩되자마자, 뒤에서 조용히 **토큰 재발급 API(ex.`/api/reissue`)를 호출**한다.
+4. 이때 브라우저는 `HttpOnly` 쿠키에 담긴 `RefreshToken`을 자동으로 함께 보낸다.
+5. 서버는 `RefreshToken`이 유효하다면, 새로운 `AccessToken`을 발급해서 응답으로 내려준다.
+6. 클라이언트는 이 새로운 `AccessToken`을 받아서 메모리에 저장하고, 로그인 완료 상태로 UI를 업데이트 한다.
+
+이 모든 과정이 빠르게 처리되기 때문에, 사용자는 자신이 계속 로그인 상태를 유지하고 있다고 느끼게 된다.
+
+![](/images/efficient-token-management/3.png)
+
+#### 참고 자료
+
+[LocalStorage vs. Cookies: JWT 토큰을 안전하게 저장하기 위해 알아야할 모든것]
+(https://hshine1226.medium.com/localstorage-vs-cookies-jwt-%ED%86%A0%ED%81%B0%EC%9D%84-%EC%95%88%EC%A0%84%ED%95%98%EA%B2%8C-%EC%A0%80%EC%9E%A5%ED%95%98%EA%B8%B0-%EC%9C%84%ED%95%B4-%EC%95%8C%EC%95%84%EC%95%BC%ED%95%A0-%EB%AA%A8%EB%93%A0%EA%B2%83-4fb7fb41327c)
+
+[JWT를 조금 더 안전하게 저장하기 & 쿠키와 웹 스토리지]
+(https://kimjingyu.tistory.com/entry/JWT%EB%A5%BC-%EC%A1%B0%EA%B8%88-%EB%8D%94-%EC%95%88%EC%A0%84%ED%95%98%EA%B2%8C-%EC%A0%80%EC%9E%A5%ED%95%98%EA%B8%B0-%EC%BF%A0%ED%82%A4%EC%99%80-%EC%9B%B9-%EC%8A%A4%ED%86%A0%EB%A6%AC%EC%A7%80)
+
+[🍪 프론트에서 안전하게 로그인 처리하기 (ft. React)]
+(https://velog.io/@yaytomato/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%90%EC%84%9C-%EC%95%88%EC%A0%84%ED%95%98%EA%B2%8C-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%B2%98%EB%A6%AC%ED%95%98%EA%B8%B0)

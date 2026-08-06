@@ -4,7 +4,7 @@ import { Cloud, PageTransition } from '@/components';
 import { Separator } from '@/components/ui';
 import { DYNAMIC_ROUTES_PATH } from '@/constants';
 import { Footer, Header } from '@/layout';
-import { posts } from '@/lib/posts';
+import { postCategories, posts } from '@/lib/posts';
 import { ArrowRight } from 'lucide-react';
 
 export default function Home() {
@@ -45,19 +45,12 @@ export default function Home() {
               <section className='home-categories'>
                 <h2>Browse By Category</h2>
                 <div>
-                  {[
-                    ['AI', 'AI'],
-                    ['Terminal', 'Terminal'],
-                    ['Workflow', 'Workflow'],
-                    ['CLI', 'CLI'],
-                    ['Investment', '투자'],
-                    ['Automation', '자동매매'],
-                  ].map(([label, tag]) => (
+                  {postCategories.map((category) => (
                     <Link
-                      href={DYNAMIC_ROUTES_PATH.ARTICLES({ tag })}
-                      key={tag}
+                      href={DYNAMIC_ROUTES_PATH.ARTICLES({ tag: category })}
+                      key={category}
                     >
-                      {label}
+                      {category}
                     </Link>
                   ))}
                 </div>

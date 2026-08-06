@@ -79,7 +79,7 @@ export function MobileNav() {
             role='dialog'
           >
             <div className='mobile-nav-topline'>
-              <span>dobbymin</span>
+              <span>dobby_min</span>
               <Button
                 aria-label='메뉴 닫기'
                 className='icon-button'
@@ -107,13 +107,6 @@ export function MobileNav() {
                 target='_blank'
               >
                 GitHub
-              </a>
-              <a
-                href={EXTERNAL_ROUTES_PATH.WIKI}
-                rel='noreferrer'
-                target='_blank'
-              >
-                Wiki
               </a>
             </nav>
           </div>

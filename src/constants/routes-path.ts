@@ -11,7 +11,6 @@ export const ROUTES_PATH = {
 
 export const EXTERNAL_ROUTES_PATH = {
   GITHUB: 'https://github.com/dobbymin',
-  WIKI: 'https://wiki.dobbymin.cloud/',
 } as const;
 
 type ArticlesSearchParams = Record<string, string | undefined>;
@@ -21,8 +20,8 @@ const withSearchParams = (
   searchParams: Record<string, string | undefined> = {},
 ) => {
   const query = new URLSearchParams(
-    Object.entries(searchParams).filter(
-      (entry): entry is [string, string] => Boolean(entry[1]),
+    Object.entries(searchParams).filter((entry): entry is [string, string] =>
+      Boolean(entry[1]),
     ),
   ).toString();
 

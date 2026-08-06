@@ -16,6 +16,11 @@ export const metadata: Metadata = {
     template: '%s | dobbymin',
   },
   description: '개발 경험을 기록합니다.',
+  icons: {
+    apple: '/logo.png',
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
