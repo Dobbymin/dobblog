@@ -11,7 +11,7 @@ export default function Home() {
       <Header variant='home' />
       <main className='clone-home'>
         <section className='clone-home-sky'>
-          <Cloud height='506px' variant='home' viewBoxHeight={506} />
+          <Cloud height='536px' variant='home' viewBoxHeight={536} />
         </section>
         <div className='site-shell clone-home-grid'>
           <section className='home-newest'>
