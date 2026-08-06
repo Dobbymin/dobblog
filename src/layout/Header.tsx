@@ -2,9 +2,15 @@ import Link from 'next/link';
 
 import { MobileNav, ThemeToggle } from '@/components';
 
-export const Header = () => {
+type HeaderProps = {
+  variant?: 'default' | 'home';
+};
+
+export const Header = ({ variant = 'default' }: HeaderProps) => {
   return (
-    <header className='site-header'>
+    <header
+      className={`site-header ${variant === 'home' ? 'home-site-header' : ''}`}
+    >
       <div className='site-shell site-header-inner'>
         <Link
           aria-label='dobbymin 개발 블로그 홈'

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { Cloud, PostCard } from '@/components';
+import { Cloud, HeroArtwork } from '@/components';
 import { Footer, Header } from '@/layout';
 import { posts } from '@/lib/posts';
 import { ArrowRight } from 'lucide-react';
@@ -8,78 +8,65 @@ import { ArrowRight } from 'lucide-react';
 export default function Home() {
   return (
     <>
-      <Header />
-      <main>
-        <section className='home-hero'>
-          <Cloud height='min(31rem, 56vw)' />
-          <div className='site-shell hero-content'>
-            <p className='eyebrow'>Developer notes &amp; projects</p>
-            <h1>
-              개발 경험을
-              <br />
-              <em>기록합니다.</em>
-            </h1>
-            <p className='hero-description'>
-              문제를 해결한 과정과, 만들며 배운 것들을 남깁니다.
-            </p>
-          </div>
+      <Header variant='home' />
+      <main className='clone-home'>
+        <section className='clone-home-sky'>
+          <Cloud height='456px' viewBoxHeight={456} />
+          <HeroArtwork />
+          <div aria-hidden='true' className='home-foreground-cloud' />
         </section>
-
-        <section className='site-shell content-section latest-section'>
-          <div className='section-heading'>
-            <div>
-              <p className='eyebrow'>Recently published</p>
-              <h2>Latest articles</h2>
-            </div>
-            <Link className='text-link' href='/articles'>
-              모든 글 보기 <ArrowRight size={17} />
-            </Link>
-          </div>
-          <div className='post-grid'>
-            {posts.slice(0, 3).map((post) => (
-              <PostCard key={post.slug} post={post} />
-            ))}
-          </div>
-        </section>
-
-        <section className='topic-band'>
-          <div className='site-shell content-section'>
-            <p className='eyebrow'>Browse by topic</p>
-            <h2>관심사 따라 읽기</h2>
-            <div className='topic-list'>
-              {[
-                ['AI & Agent', 'AI'],
-                ['Terminal', 'Terminal'],
-                ['Workflow', 'Workflow'],
-                ['CLI', 'CLI'],
-                ['Investing', '투자'],
-              ].map(([topic, tag], index) => (
-                <Link
-                  href={`/articles?tag=${encodeURIComponent(tag)}`}
-                  key={topic}
-                >
-                  <span>0{index + 1}</span>
-                  {topic}
-                  <ArrowRight size={18} />
+        <div className='site-shell clone-home-grid'>
+          <section className='home-newest'>
+            <h1>Articles and Tutorials</h1>
+            {posts.slice(0, 4).map((post, index) => (
+              <article className='home-article' key={post.slug}>
+                <Link href={`/articles/${post.slug}`}>
+                  <h2>{post.title}</h2>
                 </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className='site-shell content-section popular-section'>
-          <div className='section-heading'>
-            <div>
-              <p className='eyebrow'>From wiki</p>
-              <h2>Popular notes</h2>
-            </div>
-          </div>
-          <div className='compact-post-list'>
-            {posts.slice(3).map((post) => (
-              <PostCard key={post.slug} post={post} variant='compact' />
+                <p>{post.description}</p>
+                <Link className='read-more' href={`/articles/${post.slug}`}>
+                  Read more <ArrowRight size={18} />
+                </Link>
+                {index < 3 && <hr />}
+              </article>
             ))}
-          </div>
-        </section>
+          </section>
+          <aside className='home-aside'>
+            <section className='home-categories'>
+              <h2>Browse By Category</h2>
+              <div>
+                {[
+                  ['AI', 'AI'],
+                  ['Terminal', 'Terminal'],
+                  ['Workflow', 'Workflow'],
+                  ['CLI', 'CLI'],
+                  ['Investment', '투자'],
+                  ['Automation', '자동매매'],
+                ].map(([label, tag]) => (
+                  <Link
+                    href={`/articles?tag=${encodeURIComponent(tag)}`}
+                    key={tag}
+                  >
+                    {label}
+                  </Link>
+                ))}
+              </div>
+            </section>
+            <section className='home-popular'>
+              <h2>Popular Content</h2>
+              <ol>
+                {posts
+                  .slice(4)
+                  .concat(posts.slice(0, 3))
+                  .map((post) => (
+                    <li key={post.slug}>
+                      <Link href={`/articles/${post.slug}`}>{post.title}</Link>
+                    </li>
+                  ))}
+              </ol>
+            </section>
+          </aside>
+        </div>
       </main>
       <Footer />
     </>
