@@ -729,7 +729,7 @@ a:focus-visible {
   z-index: 2;
 }
 .about-hero h1 {
-  font-size: 4rem;
+  font-size: 3.25rem;
   font-weight: 700;
   letter-spacing: normal;
   line-height: 1.5;
@@ -739,7 +739,7 @@ a:focus-visible {
   color: var(--accent);
 }
 .about-hero-content > p {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   line-height: 1.5;
   margin: 0 0 28px;
   max-width: 550px;
@@ -748,7 +748,7 @@ a:focus-visible {
   align-items: center;
   color: var(--accent);
   display: inline-flex;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   gap: 8px;
   line-height: 1.5;
@@ -779,7 +779,7 @@ a:focus-visible {
 }
 .about-section-header > p {
   color: var(--accent);
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.125em;
   line-height: 1.5;
@@ -787,7 +787,7 @@ a:focus-visible {
   text-transform: uppercase;
 }
 .about-section-header h2 {
-  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-size: clamp(1.75rem, 3vw, 2.125rem);
   font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1.2;
@@ -808,7 +808,7 @@ a:focus-visible {
 }
 .about-year h3 {
   color: var(--accent);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.5;
   margin: 0;
@@ -819,7 +819,7 @@ a:focus-visible {
   padding-left: 24px;
 }
 .about-year li {
-  font-size: 1.125rem;
+  font-size: 1rem;
   line-height: 1.65;
   padding-left: 4px;
 }
@@ -838,7 +838,7 @@ a:focus-visible {
 .about-tech-badge {
   border-color: var(--line);
   border-radius: 999px;
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 600;
   gap: 10px;
   height: 44px;
@@ -1478,12 +1478,12 @@ a:focus-visible {
     padding-top: 88px;
   }
   .about-hero h1 {
-    font-size: 2.625rem;
+    font-size: 2.25rem;
     line-height: 1.2;
     margin-bottom: 32px;
   }
   .about-hero-content > p {
-    font-size: 1.125rem;
+    font-size: 1rem;
   }
   .about-hero-clouds {
     height: 270px;
@@ -1505,7 +1505,7 @@ a:focus-visible {
     margin-bottom: 16px;
   }
   .about-year li {
-    font-size: 1rem;
+    font-size: 0.9375rem;
   }
   .about-tech-list {
     margin-top: 36px;
