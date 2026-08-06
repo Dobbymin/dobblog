@@ -43,8 +43,9 @@ export function AboutContent() {
     <main>
       <section className='about-hero'>
         <div className='site-shell about-hero-content'>
-          <h1>
-            강민 <span>Dobbymin</span>
+          <h1 className='flex items-baseline gap-4'>
+            김강민
+            <span className='text-2xl'>Dobbymin</span>
           </h1>
           <p>
             웹 프론트엔드 개발자를 꿈꾸고 있습니다.
@@ -87,7 +88,7 @@ export function AboutContent() {
           </div>
         </section>
 
-        <section className='about-section about-tech-section'>
+        <section className='about-section'>
           <header className='about-section-header'>
             <p>Tech Stack</p>
             <h2>주로 사용하는 기술</h2>
