@@ -1,5 +1,23 @@
 # 작업 오류 기록
 
+## 2026-08-06 — GitHub Actions pnpm 버전 중복 지정
+
+### 발생한 오류
+
+- 첫 Pages workflow의 `pnpm/action-setup`에서 `version: 10`과 `package.json`의 `packageManager: pnpm@10.32.1`을 동시에 사용해 배포가 중단됐다.
+- 함께 사용한 `actions/checkout@v4`, `pnpm/action-setup@v4`에는 Node.js 20 deprecation 경고가 발생했다.
+
+### 원인
+
+- 기존 원격 workflow와 Next.js 템플릿을 참고하면서 현재 `pnpm/action-setup`의 중복 버전 검증 동작을 확인하지 않았다.
+- 각 Action의 최신 release를 조회했지만 검증된 기존 예시를 우선해 구 major를 선택했다.
+
+### 수정 및 반복 방지 규칙
+
+1. `packageManager`가 있는 프로젝트에서는 `pnpm/action-setup`의 `version`을 중복 지정하지 않는다.
+2. workflow 작성 시 공식 release와 runner deprecation 경고를 함께 확인한다.
+3. Pages workflow는 실제 GitHub-hosted runner에서 한 번 성공할 때까지 배포 완료로 판단하지 않는다.
+
 ## 2026-08-06 — 원격 템플릿 파일 경로 추정 조회
 
 ### 발생한 오류
