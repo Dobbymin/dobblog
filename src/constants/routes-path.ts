@@ -2,7 +2,7 @@ export const SITE_URL = 'https://dobbymin.github.io';
 
 export const ROUTES_PATH = {
   HOME: '/',
-  HOME_ABOUT: '/#about',
+  ABOUT: '/about',
   ARTICLE: '/articles/:slug',
   RSS: '/rss.xml',
   SITEMAP: '/sitemap.xml',

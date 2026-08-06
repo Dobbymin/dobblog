@@ -38,7 +38,7 @@ export const Footer = () => {
               <h2>General</h2>
               <ul>
                 <li>
-                  <Link href={ROUTES_PATH.HOME_ABOUT}>About</Link>
+                  <Link href={ROUTES_PATH.ABOUT}>About</Link>
                 </li>
                 <li>
                   <a href={ROUTES_PATH.RSS}>RSS Feed</a>

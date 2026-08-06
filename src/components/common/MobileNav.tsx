@@ -106,10 +106,7 @@ export function MobileNav() {
               >
                 GitHub
               </a>
-              <Link
-                href={ROUTES_PATH.HOME_ABOUT}
-                onClick={() => setIsOpen(false)}
-              >
+              <Link href={ROUTES_PATH.ABOUT} onClick={() => setIsOpen(false)}>
                 About
               </Link>
             </nav>

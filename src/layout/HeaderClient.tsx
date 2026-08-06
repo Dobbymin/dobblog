@@ -9,7 +9,7 @@ import { EXTERNAL_ROUTES_PATH, ROUTES_PATH } from '@/constants';
 import { Rss } from 'lucide-react';
 
 type HeaderClientProps = {
-  variant: 'default' | 'home' | 'article';
+  variant: 'default' | 'home' | 'article' | 'about';
 };
 
 export const HeaderClient = ({ variant }: HeaderClientProps) => {
@@ -43,7 +43,7 @@ export const HeaderClient = ({ variant }: HeaderClientProps) => {
 
   return (
     <header
-      className={`site-header ${variant === 'home' ? 'home-site-header' : ''} ${variant === 'article' ? 'article-site-header' : ''} ${isScrolled ? 'is-scrolled' : ''}`}
+      className={`site-header ${variant === 'home' ? 'home-site-header' : ''} ${variant === 'article' ? 'article-site-header' : ''} ${variant === 'about' ? 'about-site-header' : ''} ${isScrolled ? 'is-scrolled' : ''}`}
       ref={headerRef}
     >
       <div className='site-shell site-header-inner'>
@@ -70,7 +70,7 @@ export const HeaderClient = ({ variant }: HeaderClientProps) => {
           >
             GitHub
           </a>
-          <Link href={ROUTES_PATH.HOME_ABOUT}>About</Link>
+          <Link href={ROUTES_PATH.ABOUT}>About</Link>
         </nav>
         <div className='header-actions'>
           <ThemeToggle />
