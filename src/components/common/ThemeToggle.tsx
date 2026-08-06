@@ -1,7 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui';
 import { SunMoon } from 'lucide-react';
+
+import { Button } from '../ui';
 
 const storageKey = 'dobbymin-color-theme';
 

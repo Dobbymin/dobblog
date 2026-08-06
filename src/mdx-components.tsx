@@ -5,7 +5,7 @@ import {
   isValidElement,
 } from 'react';
 
-import { toAnchorId } from '@/lib/toc';
+import { toAnchorId } from '@/utils';
 import type { MDXComponents } from 'mdx/types';
 
 function toText(children: ReactNode): string {

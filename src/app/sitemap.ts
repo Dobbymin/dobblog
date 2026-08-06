@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 import { DYNAMIC_ROUTES_PATH, ROUTES_PATH, SITE_URL } from '@/constants';
-import { posts } from '@/lib/posts';
+import { posts } from '@/libs';
 
 export const dynamic = 'force-static';
 

@@ -2,66 +2,24 @@
 
 import Link from 'next/link';
 
-import { Fragment, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { Button, Input } from '@/components/ui';
 import { DYNAMIC_ROUTES_PATH } from '@/constants';
-import type { PostMetadata } from '@/lib/posts';
+import { useSearch } from '@/hooks';
+import type { PostMetadata } from '@/types';
 import { Search, Trash2, X } from 'lucide-react';
 
-type SearchOverlayProps = {
+import { Button, Input } from '../ui';
+
+import { HighlightedText } from './HighlightedText';
+
+type Props = {
   onDismiss: () => void;
   posts: PostMetadata[];
 };
 
-const normalize = (value: string) => value.toLocaleLowerCase('ko');
-
-const escapeRegExp = (value: string) =>
-  value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-function HighlightedText({ query, text }: { query: string; text: string }) {
-  const tokens = query.trim().split(/\s+/).filter(Boolean);
-  if (!tokens.length) return text;
-
-  const pattern = new RegExp(`(${tokens.map(escapeRegExp).join('|')})`, 'giu');
-  const normalizedTokens = new Set(tokens.map(normalize));
-
-  return text
-    .split(pattern)
-    .map((part, index) => (
-      <Fragment key={`${part}-${index}`}>
-        {normalizedTokens.has(normalize(part)) ? <mark>{part}</mark> : part}
-      </Fragment>
-    ));
-}
-
-export function SearchOverlay({ onDismiss, posts }: SearchOverlayProps) {
-  const [query, setQuery] = useState('');
-  const results = useMemo(() => {
-    const tokens = query.trim().split(/\s+/).filter(Boolean).map(normalize);
-    if (!tokens.length) return [];
-
-    return posts.filter((post) => {
-      const searchableText = normalize(
-        [post.title, post.description, ...post.tags, ...post.headings].join(
-          ' ',
-        ),
-      );
-
-      return tokens.every((token) => searchableText.includes(token));
-    });
-  }, [posts, query]);
-
-  useEffect(() => {
-    const dismissOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onDismiss();
-    };
-
-    window.addEventListener('keydown', dismissOnEscape);
-    return () => window.removeEventListener('keydown', dismissOnEscape);
-  }, [onDismiss]);
-
+export function SearchOverlay({ onDismiss, posts }: Props) {
+  const { query, results, setQuery } = useSearch(posts, onDismiss);
   const hasResults = results.length > 0;
 
   return createPortal(

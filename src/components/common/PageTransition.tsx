@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 import { ViewTransition } from 'react';
 
-type PageTransitionProps = {
+type Props = {
   children: ReactNode;
 };
 
-export function PageTransition({ children }: PageTransitionProps) {
+export function PageTransition({ children }: Props) {
   return <ViewTransition default='none'>{children}</ViewTransition>;
 }

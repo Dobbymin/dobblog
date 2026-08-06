@@ -4,18 +4,19 @@ import Link from 'next/link';
 
 import { useState } from 'react';
 
-import { Button, Separator } from '@/components/ui';
 import { DYNAMIC_ROUTES_PATH } from '@/constants';
-import type { PostMetadata } from '@/lib/posts';
+import type { PostMetadata } from '@/types';
 import { ArrowDown } from 'lucide-react';
+
+import { Button, Separator } from '../ui';
 
 const INITIAL_ARTICLE_COUNT = 12;
 
-type HomeArticleListProps = {
+type Props = {
   posts: PostMetadata[];
 };
 
-export function HomeArticleList({ posts }: HomeArticleListProps) {
+export function HomeArticleList({ posts }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const hasMoreArticles = posts.length > INITIAL_ARTICLE_COUNT;
   const visiblePosts = isExpanded

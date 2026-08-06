@@ -72,20 +72,7 @@ import Vercel, {
 import ZustandMiddleware, {
   metadata as ZustandMiddlewareMetadata,
 } from '@/content/articles/zustand-middleware.mdx';
-
-export type PostMetadata = {
-  slug: string;
-  title: string;
-  description: string;
-  date: string;
-  readingTime: string;
-  tags: string[];
-  headings: string[];
-};
-
-export type Post = PostMetadata & {
-  Content: ComponentType;
-};
+import type { Post, PostMetadata } from '@/types';
 
 const toPost = (
   metadata: Record<string, unknown>,
@@ -138,12 +125,4 @@ export const postSummaries: PostMetadata[] = posts.map((post) => ({
 
 export function getPost(slug: string) {
   return posts.find((post) => post.slug === slug);
-}
-
-export function formatDate(date: string) {
-  return new Intl.DateTimeFormat('ko-KR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date(`${date}T00:00:00+09:00`));
 }

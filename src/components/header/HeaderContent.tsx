@@ -2,59 +2,25 @@
 
 import Link from 'next/link';
 
-import { useEffect, useRef, useState } from 'react';
-
-import { MobileNav, SearchOverlay, ThemeToggle } from '@/components';
-import { Button } from '@/components/ui';
 import { EXTERNAL_ROUTES_PATH, ROUTES_PATH } from '@/constants';
-import type { PostMetadata } from '@/lib/posts';
+import { useHeader } from '@/hooks';
+import type { HeaderVariant, PostMetadata } from '@/types';
 import { Rss, Search } from 'lucide-react';
 
-type HeaderClientProps = {
+import { ThemeToggle } from '../common';
+import { SearchOverlay } from '../search';
+import { Button } from '../ui';
+
+import { MobileNav } from './MobileNav';
+
+type Props = {
   searchPosts: PostMetadata[];
-  variant: 'default' | 'home' | 'article' | 'about';
+  variant: HeaderVariant;
 };
 
-export const HeaderClient = ({ searchPosts, variant }: HeaderClientProps) => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const headerRef = useRef<HTMLElement>(null);
-  const searchTriggerRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (variant !== 'home' && variant !== 'about') return;
-
-    let animationFrame = 0;
-    const updateScrollState = () => {
-      window.cancelAnimationFrame(animationFrame);
-      animationFrame = window.requestAnimationFrame(() => {
-        const scrollPosition = window.scrollY;
-        const headerOffset = Math.max(0, 32 - scrollPosition);
-        headerRef.current?.style.setProperty(
-          '--home-header-offset',
-          `${headerOffset}px`,
-        );
-        setIsScrolled(scrollPosition > 300);
-      });
-    };
-
-    updateScrollState();
-    window.addEventListener('scroll', updateScrollState, { passive: true });
-    return () => {
-      window.cancelAnimationFrame(animationFrame);
-      window.removeEventListener('scroll', updateScrollState);
-    };
-  }, [variant]);
-
-  const openSearch = () => {
-    searchTriggerRef.current = document.activeElement as HTMLElement | null;
-    setIsSearchOpen(true);
-  };
-
-  const closeSearch = () => {
-    setIsSearchOpen(false);
-    window.requestAnimationFrame(() => searchTriggerRef.current?.focus());
-  };
+export function HeaderContent({ searchPosts, variant }: Props) {
+  const { closeSearch, headerRef, isScrolled, isSearchOpen, openSearch } =
+    useHeader(variant);
 
   return (
     <>
@@ -125,4 +91,4 @@ export const HeaderClient = ({ searchPosts, variant }: HeaderClientProps) => {
       )}
     </>
   );
-};
+}

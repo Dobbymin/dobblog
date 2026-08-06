@@ -1,14 +1,11 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { ArticleToc, Cloud, PageTransition } from '@/components';
-import { DYNAMIC_ROUTES_PATH } from '@/constants';
+import { ArticleContent, PageTransition } from '@/components';
 import { Footer, Header } from '@/layout';
-import { formatDate, getPost, posts } from '@/lib/posts';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { getPost, posts } from '@/libs';
 
-type ArticlePageProps = {
+type Props = {
   params: Promise<{ slug: string }>;
 };
 
@@ -16,9 +13,7 @@ export function generateStaticParams() {
   return posts.map(({ slug }) => ({ slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: ArticlePageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return {};
@@ -29,7 +24,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ArticlePage({ params }: ArticlePageProps) {
+export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) notFound();
@@ -37,67 +32,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const index = posts.findIndex((item) => item.slug === post.slug);
   const previousPost = posts[index + 1];
   const nextPost = posts[index - 1];
-  const { Content } = post;
-
   return (
     <PageTransition>
       <div className='route-transition-page'>
         <div className='article-detail-page'>
           <Header variant='article' />
-          <section className='article-hero'>
-            <div className='article-hero-spacer' />
-            <header className='site-shell article-header'>
-              <h1>{post.title}</h1>
-              <dl className='article-meta'>
-                <dt>Filed under</dt>
-                <dd>{post.tags[0]}</dd>
-                <dt>on</dt>
-                <dd>
-                  <time dateTime={post.date}>{formatDate(post.date)}</time>.
-                </dd>
-              </dl>
-            </header>
-            <Cloud height='357px' variant='article' viewBoxHeight={357} />
-          </section>
-          <main className='article-main'>
-            <div className='site-shell article-page'>
-              <div className='article-layout'>
-                <article className='prose'>
-                  <Content />
-                </article>
-                <ArticleToc headings={post.headings} />
-              </div>
-              <nav aria-label='글 탐색' className='article-pagination'>
-                {previousPost ? (
-                  <Link
-                    href={DYNAMIC_ROUTES_PATH.ARTICLE(previousPost.slug)}
-                    transitionTypes={['article-back']}
-                  >
-                    <ArrowLeft size={17} />
-                    <span>
-                      이전 글<strong>{previousPost.title}</strong>
-                    </span>
-                  </Link>
-                ) : (
-                  <span />
-                )}
-                {nextPost ? (
-                  <Link
-                    className='next-article-link'
-                    href={DYNAMIC_ROUTES_PATH.ARTICLE(nextPost.slug)}
-                    transitionTypes={['article-forward']}
-                  >
-                    <span>
-                      다음 글<strong>{nextPost.title}</strong>
-                    </span>
-                    <ArrowRight size={17} />
-                  </Link>
-                ) : (
-                  <span />
-                )}
-              </nav>
-            </div>
-          </main>
+          <ArticleContent
+            nextPost={nextPost}
+            post={post}
+            previousPost={previousPost}
+          />
         </div>
         <Footer />
       </div>

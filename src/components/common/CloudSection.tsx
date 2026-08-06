@@ -1,10 +1,10 @@
-type CloudSectionProps = {
+type Props = {
   sectionBgColor?: string;
 };
 
 export const CloudSection = ({
   sectionBgColor = 'var(--color-background)',
-}: CloudSectionProps) => {
+}: Props) => {
   return (
     <>
       <svg

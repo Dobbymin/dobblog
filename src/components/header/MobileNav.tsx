@@ -2,55 +2,15 @@
 
 import Link from 'next/link';
 
-import { useEffect, useRef, useState } from 'react';
-
-import { Button } from '@/components/ui';
 import { EXTERNAL_ROUTES_PATH, ROUTES_PATH } from '@/constants';
+import { useMobileNav } from '@/hooks';
 import { Menu, X } from 'lucide-react';
 
-const focusableSelector =
-  'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+import { Button } from '../ui';
 
 export function MobileNav() {
-  const [isOpen, setIsOpen] = useState(false);
-  const dialogRef = useRef<HTMLDivElement>(null);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-
-  const closeMenu = () => {
-    setIsOpen(false);
-    window.requestAnimationFrame(() => menuButtonRef.current?.focus());
-  };
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const firstFocusable =
-      dialogRef.current?.querySelector<HTMLElement>(focusableSelector);
-    firstFocusable?.focus();
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') closeMenu();
-      if (event.key !== 'Tab' || !dialogRef.current) return;
-
-      const elements = Array.from(
-        dialogRef.current.querySelectorAll<HTMLElement>(focusableSelector),
-      );
-      const first = elements.at(0);
-      const last = elements.at(-1);
-      if (!first || !last) return;
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [isOpen]);
+  const { closeMenu, dialogRef, isOpen, menuButtonRef, openMenu } =
+    useMobileNav();
 
   return (
     <div className='mobile-nav'>
@@ -59,7 +19,7 @@ export function MobileNav() {
         aria-expanded={isOpen}
         aria-label='메뉴 열기'
         className='icon-button'
-        onClick={() => setIsOpen(true)}
+        onClick={openMenu}
         ref={menuButtonRef}
         size='icon'
         type='button'
@@ -108,7 +68,7 @@ export function MobileNav() {
               </a>
               <Link
                 href={ROUTES_PATH.ABOUT}
-                onClick={() => setIsOpen(false)}
+                onClick={closeMenu}
                 transitionTypes={['article-forward']}
               >
                 About

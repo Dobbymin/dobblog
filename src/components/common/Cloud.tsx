@@ -2,7 +2,7 @@ type CloudLayer = {
   color: string;
 };
 
-type CloudProps = {
+type Props = {
   height?: string;
   viewBoxHeight?: number;
   ariaHidden?: boolean;
@@ -96,7 +96,7 @@ export const Cloud = ({
   ariaHidden = true,
   layers,
   variant = 'default',
-}: CloudProps) => {
+}: Props) => {
   const verticalScale = viewBoxHeight / 357;
 
   return (

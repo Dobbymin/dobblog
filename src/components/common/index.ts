@@ -1,6 +1,5 @@
-export { Cloud } from './Cloud';
-export { CloudSection } from './CloudSection';
-export { MobileNav } from './MobileNav';
-export { PageTransition } from './PageTransition';
-export { GithubIcon, LinkedInIcon } from './SocialIcons';
-export { ThemeToggle } from './ThemeToggle';
+export * from './Cloud';
+export * from './CloudSection';
+export * from './PageTransition';
+export * from './SocialIcons';
+export * from './ThemeToggle';

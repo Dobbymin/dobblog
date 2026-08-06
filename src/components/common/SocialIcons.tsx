@@ -1,8 +1,8 @@
 import type { SVGProps } from 'react';
 
-type SocialIconProps = SVGProps<SVGSVGElement>;
+type Props = SVGProps<SVGSVGElement>;
 
-export function GithubIcon(props: SocialIconProps) {
+export function GithubIcon(props: Props) {
   return (
     <svg aria-hidden='true' viewBox='0 0 16 16' {...props}>
       <path
@@ -13,7 +13,7 @@ export function GithubIcon(props: SocialIconProps) {
   );
 }
 
-export function LinkedInIcon(props: SocialIconProps) {
+export function LinkedInIcon(props: Props) {
   return (
     <svg aria-hidden='true' viewBox='0 0 16 16' {...props}>
       <path

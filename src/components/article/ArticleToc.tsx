@@ -1,10 +1,10 @@
-import { toAnchorId } from '@/lib/toc';
+import { toAnchorId } from '@/utils';
 
-type ArticleTocProps = {
+type Props = {
   headings: string[];
 };
 
-export function ArticleToc({ headings }: ArticleTocProps) {
+export function ArticleToc({ headings }: Props) {
   if (!headings.length) return null;
 
   return (

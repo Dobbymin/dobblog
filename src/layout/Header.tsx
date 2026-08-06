@@ -1,11 +1,11 @@
-import { postSummaries } from '@/lib/posts';
+import { HeaderContent } from '@/components';
+import { postSummaries } from '@/libs';
+import type { HeaderVariant } from '@/types';
 
-import { HeaderClient } from './HeaderClient';
-
-type HeaderProps = {
-  variant?: 'default' | 'home' | 'article' | 'about';
+type Props = {
+  variant?: HeaderVariant;
 };
 
-export const Header = ({ variant = 'default' }: HeaderProps) => (
-  <HeaderClient searchPosts={postSummaries} variant={variant} />
+export const Header = ({ variant = 'default' }: Props) => (
+  <HeaderContent searchPosts={postSummaries} variant={variant} />
 );
