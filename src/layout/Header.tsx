@@ -9,14 +9,15 @@ import {
   EXTERNAL_ROUTES_PATH,
   ROUTES_PATH,
 } from '@/constants';
-import { Rss, Search } from 'lucide-react';
+import { Rss, Search, Volume2, VolumeX } from 'lucide-react';
 
 type HeaderProps = {
-  variant?: 'default' | 'home';
+  variant?: 'default' | 'home' | 'article';
 };
 
 export const Header = ({ variant = 'default' }: HeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isSoundMuted, setIsSoundMuted] = useState(false);
 
   useEffect(() => {
     if (variant !== 'home') return;
@@ -32,7 +33,7 @@ export const Header = ({ variant = 'default' }: HeaderProps) => {
 
   return (
     <header
-      className={`site-header ${variant === 'home' ? 'home-site-header' : ''} ${isScrolled ? 'is-scrolled' : ''}`}
+      className={`site-header ${variant === 'home' ? 'home-site-header' : ''} ${variant === 'article' ? 'article-site-header' : ''} ${isScrolled ? 'is-scrolled' : ''}`}
     >
       <div className='site-shell site-header-inner'>
         <Link
@@ -54,23 +55,57 @@ export const Header = ({ variant = 'default' }: HeaderProps) => {
           </a>
         </nav>
         <div className='header-actions'>
-          <div className='header-utility'>
-            <Link
-              aria-label='글 검색'
-              className='icon-button'
-              href={ROUTES_PATH.ARTICLES}
-            >
-              <Search size={18} strokeWidth={2.25} />
-            </Link>
-            <a
-              aria-label='RSS feed'
-              className='icon-button'
-              href={ROUTES_PATH.RSS}
-            >
-              <Rss size={18} strokeWidth={2.25} />
-            </a>
-          </div>
-          <ThemeToggle />
+          {variant === 'article' ? (
+            <>
+              <Link
+                aria-label='글 검색'
+                className='icon-button'
+                href={ROUTES_PATH.ARTICLES}
+              >
+                <Search size={18} strokeWidth={2.25} />
+              </Link>
+              <button
+                aria-label={isSoundMuted ? '사운드 켜기' : '사운드 끄기'}
+                className='icon-button'
+                onClick={() => setIsSoundMuted((value) => !value)}
+                type='button'
+              >
+                {isSoundMuted ? (
+                  <VolumeX size={18} strokeWidth={2.25} />
+                ) : (
+                  <Volume2 size={18} strokeWidth={2.25} />
+                )}
+              </button>
+              <ThemeToggle />
+              <a
+                aria-label='RSS feed'
+                className='icon-button'
+                href={ROUTES_PATH.RSS}
+              >
+                <Rss size={18} strokeWidth={2.25} />
+              </a>
+            </>
+          ) : (
+            <>
+              <div className='header-utility'>
+                <Link
+                  aria-label='글 검색'
+                  className='icon-button'
+                  href={ROUTES_PATH.ARTICLES}
+                >
+                  <Search size={18} strokeWidth={2.25} />
+                </Link>
+                <a
+                  aria-label='RSS feed'
+                  className='icon-button'
+                  href={ROUTES_PATH.RSS}
+                >
+                  <Rss size={18} strokeWidth={2.25} />
+                </a>
+              </div>
+              <ThemeToggle />
+            </>
+          )}
           <MobileNav />
         </div>
       </div>

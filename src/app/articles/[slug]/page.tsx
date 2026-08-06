@@ -41,7 +41,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <>
-      <Header />
+      <Header variant='article' />
       <section className='article-hero'>
         <div className='article-hero-spacer' />
         <header className='site-shell article-header'>
