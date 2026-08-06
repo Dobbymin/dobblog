@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { ArticleToc } from '@/components';
+import { ArticleToc, Cloud } from '@/components';
 import { DYNAMIC_ROUTES_PATH } from '@/constants';
 import { Footer, Header } from '@/layout';
 import { formatDate, getPost, posts } from '@/lib/posts';
@@ -42,8 +42,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   return (
     <>
       <Header />
-      <main className='site-shell article-page'>
-        <header className='article-header'>
+      <section className='article-hero'>
+        <div className='article-hero-spacer' />
+        <header className='site-shell article-header'>
           <h1>{post.title}</h1>
           <dl className='article-meta'>
             <dt>Filed under</dt>
@@ -54,6 +55,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </dd>
           </dl>
         </header>
+        <Cloud height='357px' variant='article' viewBoxHeight={357} />
+      </section>
+      <main className='site-shell article-page'>
         <div className='article-layout'>
           <article className='prose'>
             <Content />
