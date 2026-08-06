@@ -39,7 +39,9 @@ export function HeaderContent({ searchPosts, variant }: Props) {
                 : undefined
             }
           >
-            dobby_min
+            <p>DOBBY</p>
+            <span aria-hidden='true' className='brand-mark' />
+            <p>MIN</p>
           </Link>
           <nav aria-label='주요 내비게이션' className='desktop-nav'>
             <a
@@ -73,7 +75,7 @@ export function HeaderContent({ searchPosts, variant }: Props) {
             >
               <Search className='size-5' size={20} strokeWidth={2} />
             </Button>
-            <ThemeToggle />
+            {variant !== 'about' ? <ThemeToggle /> : null}
             <a
               aria-label='RSS feed'
               className='icon-button rss-button'

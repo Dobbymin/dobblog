@@ -20,15 +20,14 @@ export function ArticleContent({ nextPost, post, previousPost }: Props) {
       <section className='article-hero'>
         <div className='article-hero-spacer' />
         <header className='site-shell article-header'>
+          <span className='article-category-badge'>{post.tags[0]}</span>
           <h1>{post.title}</h1>
-          <dl className='article-meta'>
-            <dt>Filed under</dt>
-            <dd>{post.tags[0]}</dd>
-            <dt>on</dt>
-            <dd>
-              <time dateTime={post.date}>{formatDate(post.date)}</time>.
-            </dd>
-          </dl>
+          <div className='article-meta'>
+            <span aria-label='작성일' className='article-meta-date'>
+              <span aria-hidden='true' className='cloud-mark' />
+              <time dateTime={post.date}>{formatDate(post.date)}</time>
+            </span>
+          </div>
         </header>
         <Cloud height='357px' variant='article' viewBoxHeight={357} />
       </section>

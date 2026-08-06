@@ -5,7 +5,7 @@ import { Footer, Header } from '@/layout';
 
 export const metadata: Metadata = {
   title: 'Who am I',
-  description: '프론트엔드 개발자 김강민의 활동 경험과 기술 스택.',
+  description: '프론트엔드 개발자 김강민의 대표 프로젝트와 기술 스택.',
 };
 
 export default function AboutPage() {
@@ -14,7 +14,7 @@ export default function AboutPage() {
       <div className='route-transition-page about-route'>
         <Header variant='about' />
         <AboutContent />
-        <Footer />
+        <Footer showThemeToggle={false} />
       </div>
     </PageTransition>
   );

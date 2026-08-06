@@ -5,6 +5,7 @@ import {
   isValidElement,
 } from 'react';
 
+import { CodeBlock } from '@/components';
 import { toAnchorId } from '@/utils';
 import type { MDXComponents } from 'mdx/types';
 
@@ -21,6 +22,7 @@ function toText(children: ReactNode): string {
 }
 
 const components = {
+  pre: CodeBlock,
   h2: ({ children }: { children?: ReactNode }) => {
     const heading = toText(children);
     return <h2 id={toAnchorId(heading)}>{children}</h2>;

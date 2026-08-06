@@ -7,9 +7,10 @@ import { CloudSection, GithubIcon, LinkedInIcon, ThemeToggle } from '../common';
 
 type Props = {
   categories: string[];
+  showThemeToggle?: boolean;
 };
 
-export function FooterContent({ categories }: Props) {
+export function FooterContent({ categories, showThemeToggle = true }: Props) {
   return (
     <footer className='site-footer'>
       <CloudSection sectionBgColor='var(--background)' />
@@ -47,7 +48,7 @@ export function FooterContent({ categories }: Props) {
           </div>
 
           <div className='footer-icons'>
-            <ThemeToggle />
+            {showThemeToggle ? <ThemeToggle /> : null}
             <a aria-label='RSS feed' href={ROUTES_PATH.RSS}>
               <Rss size={20} />
             </a>

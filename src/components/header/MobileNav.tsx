@@ -38,7 +38,7 @@ export function MobileNav() {
             role='dialog'
           >
             <div className='mobile-nav-topline'>
-              <span>dobby_min</span>
+              <span aria-hidden='true' className='brand-mark' />
               <Button
                 aria-label='메뉴 닫기'
                 className='icon-button'

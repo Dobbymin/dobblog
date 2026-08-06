@@ -220,7 +220,7 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), {
 
 단순히 new Date(kstString)을 하면 브라우저가 로컬 시간으로 해석하고, ApexCharts는 이를 다시 UTC로 변환하여 표시하므로 **시간이 9시간 밀리는 현상이 발생** 한다. 이를 해결하기 위해 KST 시간 문자열 뒤에 `"Z"`를 붙여 강제로 UTC로 인식시켰다.
 
-```typeScript
+```typescript
 
 // KST 시간을 UTC로 취급하여 차트에 주입 ("Z" 추가)
 const parseKstToUtc = (kstString: string) => {

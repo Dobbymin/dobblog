@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
 
 const withMDX = createMDX({
   extension: /\.mdx$/,
+  options: {
+    remarkPlugins: ['remark-gfm'],
+    rehypePlugins: [['rehype-prism-plus', { ignoreMissing: true }]],
+  },
 });
 
 export default withMDX(nextConfig);
