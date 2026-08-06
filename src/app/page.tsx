@@ -1,11 +1,9 @@
 import Link from 'next/link';
 
-import { Cloud, PageTransition } from '@/components';
-import { Separator } from '@/components/ui';
+import { Cloud, HomeArticleList, PageTransition } from '@/components';
 import { DYNAMIC_ROUTES_PATH } from '@/constants';
 import { Footer, Header } from '@/layout';
-import { postCategories, posts } from '@/lib/posts';
-import { ArrowRight } from 'lucide-react';
+import { postCategories, postSummaries, posts } from '@/lib/posts';
 
 export default function Home() {
   return (
@@ -18,32 +16,12 @@ export default function Home() {
           </section>
           <div className='site-shell clone-home-grid'>
             <section className='home-newest'>
-              <h1>Articles and Tutorials</h1>
-              {posts.map((post, index) => (
-                <article className='home-article' key={post.slug}>
-                  <Link
-                    href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}
-                    transitionTypes={['article-forward']}
-                  >
-                    <h2>{post.title}</h2>
-                  </Link>
-                  <p>{post.description}</p>
-                  <Link
-                    className='read-more'
-                    href={DYNAMIC_ROUTES_PATH.ARTICLE(post.slug)}
-                    transitionTypes={['article-forward']}
-                  >
-                    Read more <ArrowRight size={18} />
-                  </Link>
-                  {index < posts.length - 1 && (
-                    <Separator className='home-article-separator' />
-                  )}
-                </article>
-              ))}
+              <h1>Articles</h1>
+              <HomeArticleList posts={postSummaries} />
             </section>
             <aside className='home-aside'>
               <section className='home-categories'>
-                <h2>Browse By Category</h2>
+                <h2>Category</h2>
                 <div>
                   {postCategories.map((category) => (
                     <Link

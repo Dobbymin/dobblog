@@ -23,7 +23,7 @@ export const Footer = () => {
           </div>
           <div className='footer-grid'>
             <div>
-              <h2>Browse By Category</h2>
+              <h2>Category</h2>
               <ul>
                 {postCategories.map((category) => (
                   <li key={category}>
