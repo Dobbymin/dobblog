@@ -1,5 +1,3 @@
-import { postSummaries } from '@/lib/posts';
-
 import { HeaderClient } from './HeaderClient';
 
 type HeaderProps = {
@@ -7,5 +5,5 @@ type HeaderProps = {
 };
 
 export const Header = ({ variant = 'default' }: HeaderProps) => (
-  <HeaderClient searchPosts={postSummaries} variant={variant} />
+  <HeaderClient variant={variant} />
 );

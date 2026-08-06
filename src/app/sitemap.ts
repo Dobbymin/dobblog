@@ -7,13 +7,8 @@ export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    { url: `${SITE_URL}${ROUTES_PATH.HOME}`, lastModified: new Date('2026-08-06') },
     {
-      url: `${SITE_URL}${ROUTES_PATH.ARTICLES}`,
-      lastModified: new Date('2026-08-06'),
-    },
-    {
-      url: `${SITE_URL}${ROUTES_PATH.ABOUT}`,
+      url: `${SITE_URL}${ROUTES_PATH.HOME}`,
       lastModified: new Date('2026-08-06'),
     },
     ...posts.map((post) => ({

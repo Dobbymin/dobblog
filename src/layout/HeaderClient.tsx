@@ -4,22 +4,17 @@ import Link from 'next/link';
 
 import { useEffect, useRef, useState } from 'react';
 
-import { MobileNav, SearchOverlay, ThemeToggle } from '@/components';
-import { Button } from '@/components/ui';
-import { ROUTES_PATH } from '@/constants';
-import type { PostMetadata } from '@/lib/posts';
-import { Rss, Search } from 'lucide-react';
+import { MobileNav, ThemeToggle } from '@/components';
+import { EXTERNAL_ROUTES_PATH, ROUTES_PATH } from '@/constants';
+import { Rss } from 'lucide-react';
 
 type HeaderClientProps = {
-  searchPosts: PostMetadata[];
   variant: 'default' | 'home' | 'article';
 };
 
-export const HeaderClient = ({ searchPosts, variant }: HeaderClientProps) => {
+export const HeaderClient = ({ variant }: HeaderClientProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
-  const searchTriggerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (variant !== 'home') return;
@@ -46,63 +41,49 @@ export const HeaderClient = ({ searchPosts, variant }: HeaderClientProps) => {
     };
   }, [variant]);
 
-  const openSearch = () => {
-    searchTriggerRef.current = document.activeElement as HTMLElement | null;
-    setIsSearchOpen(true);
-  };
-
-  const closeSearch = () => {
-    setIsSearchOpen(false);
-    window.requestAnimationFrame(() => searchTriggerRef.current?.focus());
-  };
-
   return (
-    <>
-      <header
-        className={`site-header ${variant === 'home' ? 'home-site-header' : ''} ${variant === 'article' ? 'article-site-header' : ''} ${isScrolled ? 'is-scrolled' : ''}`}
-        ref={headerRef}
-      >
-        <div className='site-shell site-header-inner'>
-          <Link
-            aria-label='dobby_min 개발 블로그 홈'
-            className='wordmark'
-            href={ROUTES_PATH.HOME}
-            transitionTypes={
-              variant === 'article' ? ['article-back'] : undefined
-            }
+    <header
+      className={`site-header ${variant === 'home' ? 'home-site-header' : ''} ${variant === 'article' ? 'article-site-header' : ''} ${isScrolled ? 'is-scrolled' : ''}`}
+      ref={headerRef}
+    >
+      <div className='site-shell site-header-inner'>
+        <Link
+          aria-label='dobby_min 개발 블로그 홈'
+          className='wordmark'
+          href={ROUTES_PATH.HOME}
+          transitionTypes={variant === 'article' ? ['article-back'] : undefined}
+        >
+          dobby_min
+        </Link>
+        <nav aria-label='주요 내비게이션' className='desktop-nav'>
+          <a
+            href={EXTERNAL_ROUTES_PATH.LINKEDIN}
+            rel='noreferrer'
+            target='_blank'
           >
-            dobby_min
-          </Link>
-          <nav aria-label='주요 내비게이션' className='desktop-nav'>
-            <Link href={ROUTES_PATH.ARTICLES}>Articles</Link>
-            <Link href={ROUTES_PATH.ABOUT}>About</Link>
-          </nav>
-          <div className='header-actions'>
-            <Button
-              aria-label='글 검색'
-              className='icon-button'
-              onClick={openSearch}
-              size='icon'
-              type='button'
-              variant='ghost'
-            >
-              <Search className='size-5' size={20} strokeWidth={2} />
-            </Button>
-            <ThemeToggle />
-            <a
-              aria-label='RSS feed'
-              className='icon-button rss-button'
-              href={ROUTES_PATH.RSS}
-            >
-              <Rss className='size-5' size={20} strokeWidth={2} />
-            </a>
-            <MobileNav />
-          </div>
+            LinkedIn
+          </a>
+          <a
+            href={EXTERNAL_ROUTES_PATH.GITHUB}
+            rel='noreferrer'
+            target='_blank'
+          >
+            GitHub
+          </a>
+          <Link href={ROUTES_PATH.HOME_ABOUT}>About</Link>
+        </nav>
+        <div className='header-actions'>
+          <ThemeToggle />
+          <a
+            aria-label='RSS feed'
+            className='icon-button rss-button'
+            href={ROUTES_PATH.RSS}
+          >
+            <Rss className='size-5' size={20} strokeWidth={2} />
+          </a>
+          <MobileNav />
         </div>
-      </header>
-      {isSearchOpen && (
-        <SearchOverlay onDismiss={closeSearch} posts={searchPosts} />
-      )}
-    </>
+      </div>
+    </header>
   );
 };

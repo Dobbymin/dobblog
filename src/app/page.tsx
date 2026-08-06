@@ -24,12 +24,9 @@ export default function Home() {
                 <h2>Category</h2>
                 <div>
                   {postCategories.map((category) => (
-                    <Link
-                      href={DYNAMIC_ROUTES_PATH.ARTICLES({ tag: category })}
-                      key={category}
-                    >
+                    <span className='home-category-pill' key={category}>
                       {category}
-                    </Link>
+                    </span>
                   ))}
                 </div>
               </section>

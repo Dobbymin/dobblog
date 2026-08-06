@@ -92,15 +92,13 @@ export function MobileNav() {
               </Button>
             </div>
             <nav>
-              <Link
-                href={ROUTES_PATH.ARTICLES}
-                onClick={() => setIsOpen(false)}
+              <a
+                href={EXTERNAL_ROUTES_PATH.LINKEDIN}
+                rel='noreferrer'
+                target='_blank'
               >
-                Articles
-              </Link>
-              <Link href={ROUTES_PATH.ABOUT} onClick={() => setIsOpen(false)}>
-                About
-              </Link>
+                LinkedIn
+              </a>
               <a
                 href={EXTERNAL_ROUTES_PATH.GITHUB}
                 rel='noreferrer'
@@ -108,6 +106,12 @@ export function MobileNav() {
               >
                 GitHub
               </a>
+              <Link
+                href={ROUTES_PATH.HOME_ABOUT}
+                onClick={() => setIsOpen(false)}
+              >
+                About
+              </Link>
             </nav>
           </div>
         </div>
