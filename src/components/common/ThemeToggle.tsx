@@ -21,7 +21,6 @@ export function ThemeToggle() {
       className='icon-button'
       onClick={toggleTheme}
       size='icon'
-      type='button'
       variant='ghost'
     >
       <SunMoon className='size-5' size={20} strokeWidth={2} />

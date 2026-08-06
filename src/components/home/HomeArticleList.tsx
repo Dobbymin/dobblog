@@ -53,7 +53,6 @@ export function HomeArticleList({ posts }: Props) {
           <Button
             className='home-show-more-button'
             onClick={() => setIsExpanded(true)}
-            type='button'
           >
             <span className='home-show-more-icon' aria-hidden='true'>
               <ArrowDown />

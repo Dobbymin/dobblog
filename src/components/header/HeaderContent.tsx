@@ -69,7 +69,6 @@ export function HeaderContent({ searchPosts, variant }: Props) {
               className='icon-button'
               onClick={openSearch}
               size='icon'
-              type='button'
               variant='ghost'
             >
               <Search className='size-5' size={20} strokeWidth={2} />

@@ -67,7 +67,6 @@ export function SearchOverlay({ onDismiss, posts }: Props) {
             className='search-overlay-close'
             onClick={onDismiss}
             size='icon'
-            type='button'
             variant='ghost'
           >
             <X aria-hidden='true' className='size-6' />

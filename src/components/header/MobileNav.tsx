@@ -22,7 +22,6 @@ export function MobileNav() {
         onClick={openMenu}
         ref={menuButtonRef}
         size='icon'
-        type='button'
         variant='ghost'
       >
         <Menu className='size-5' size={20} />
@@ -45,7 +44,6 @@ export function MobileNav() {
                 className='icon-button'
                 onClick={closeMenu}
                 size='icon'
-                type='button'
                 variant='ghost'
               >
                 <X className='size-5' size={20} />
