@@ -18,7 +18,7 @@ export default function Home() {
         <div className='site-shell clone-home-grid'>
           <section className='home-newest'>
             <h1>Articles and Tutorials</h1>
-            {posts.slice(0, 4).map((post, index) => (
+            {posts.map((post, index) => (
               <article className='home-article' key={post.slug}>
                 <Link href={`/articles/${post.slug}`}>
                   <h2>{post.title}</h2>
@@ -27,7 +27,7 @@ export default function Home() {
                 <Link className='read-more' href={`/articles/${post.slug}`}>
                   Read more <ArrowRight size={18} />
                 </Link>
-                {index < 3 && <hr />}
+                {index < posts.length - 1 && <hr />}
               </article>
             ))}
           </section>
