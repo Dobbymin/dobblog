@@ -64,12 +64,26 @@ codex exec --sandbox workspace-write -c model_reasoning_effort=high \
 
 ## 결과 검수
 
+**exec 전에** 스냅샷을 떠둔다 — 이게 없으면 codex 변경을 특정할 수 없다:
+
+```bash
+git rev-parse HEAD > _workspace/02_codex_before_{NN}.txt
+git status --short >> _workspace/02_codex_before_{NN}.txt
+```
+
 exec 종료 후:
 
-1. `git status --short` + `git diff --stat` — 변경 범위가 지시한 파일과 일치하는가
+1. `git status --short`를 다시 찍고 **before 스냅샷과의 차집합**을 취한다. 같은 시간대에 메인 세션이나 다른 에이전트가 파일을 고칠 수 있으므로, 단순 `git diff`는 무관한 변경까지 codex 탓으로 올린다
 2. 각 변경 파일을 실제로 읽는다. codex의 완료 보고를 믿지 않는다 — 보고와 코드가 어긋나는 경우가 실제로 있다
-3. 수용 기준을 하나씩 대조해 `_workspace/02_codex_review_{NN}_{unit}.md`에 표로 기록
-4. 범위 밖 파일이 변경됐으면 되돌리지 말고 리포트에 표시 후 사용자 확인
+3. **UI 컴포넌트를 만들었다면 렌더 경로를 역추적한다.** 파일 존재는 검증이 아니다. 누가 import하는지, 그 소비자가 라우트에 연결돼 있는지 확인하고, 가장 확실하게는 빌드 산출물에서 특징 문자열을 grep한다 (`grep -c radial-gradient out/index.html`)
+4. 수용 기준을 하나씩 **실제로 명령을 돌려** 대조하고 `_workspace/02_codex_review_{NN}_{unit}.md`에 표로 기록
+5. 범위 밖 파일이 변경됐으면 되돌리지 말고 리포트에 표시 후 사용자 확인
+
+### 판정 권한 없음
+
+검수 리포트에 "통과", "확정", "PASS" 같은 최종 판정을 쓰지 마라. 수용 기준별 충족/미충족과 근거만 적는다. 판정은 `build-verifier`(빌드)와 `design-qa`(시각)가 내린다.
+
+특히 **수용 기준의 명령이 실패했는데 "기존 코드 문제이므로 통과"로 처리하지 마라.** 원인이 어디에 있든 종료 코드가 0이 아니면 미충족이다. 원인 분류는 별도 열에 적되, 충족 여부를 바꾸지 않는다. 이 구분이 무너지면 깨진 빌드가 통과 판정을 달고 다음 단위로 흘러간다.
 
 ## 재위임 루프
 

@@ -10,7 +10,7 @@
 
 ```
 mcp__Claude_Browser__tabs_create      → 원본용 탭
-mcp__Claude_Browser__navigate         → https://www.joshwcomeau.com/
+mcp__Claude_Browser__navigate         → {참조 사이트 URL}
 mcp__Claude_Browser__tabs_create      → 로컬용 탭
 mcp__Claude_Browser__navigate         → http://localhost:3000
 ```

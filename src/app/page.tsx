@@ -1,3 +1,10 @@
+import { Header } from '@/layout';
+
 export default function Home() {
-  return <div>home</div>;
+  return (
+    <>
+      <Header />
+      <div>home</div>
+    </>
+  );
 }

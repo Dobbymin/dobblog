@@ -1,3 +1,9 @@
+import { Cloud } from '@/components';
+
 export const Header = () => {
-  return <div>Header</div>;
+  return (
+    <header className='relative'>
+      <Cloud height='357px' />
+    </header>
+  );
 };

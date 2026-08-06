@@ -1,12 +1,20 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-sky-from: var(--color-sky-from);
+  --color-sky-to: var(--color-sky-to);
+  --color-sky-subtle: var(--color-sky-subtle);
+  --color-cloud-100: var(--color-cloud-100);
+  --color-cloud-300: var(--color-cloud-300);
+  --color-cloud-400: var(--color-cloud-400);
+  --color-cloud-500: var(--color-cloud-500);
+  --color-cloud-700: var(--color-cloud-700);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
@@ -49,6 +57,14 @@
 }
 
 :root {
+  --color-sky-from: #a0d4ee;
+  --color-sky-to: #7dc4e8;
+  --color-sky-subtle: #c5eafc;
+  --color-cloud-100: #ebf4fa;
+  --color-cloud-300: #ddeef8;
+  --color-cloud-400: #c6e2f1;
+  --color-cloud-500: #b1dff6;
+  --color-cloud-700: #6a8caf;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -84,6 +100,14 @@
 }
 
 .dark {
+  --color-sky-from: #111b27;
+  --color-sky-to: #265973;
+  --color-sky-subtle: #182939;
+  --color-cloud-100: #0d0f12;
+  --color-cloud-300: #0e1620;
+  --color-cloud-400: #0f1824;
+  --color-cloud-500: #121d2b;
+  --color-cloud-700: #6a8caf;
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
