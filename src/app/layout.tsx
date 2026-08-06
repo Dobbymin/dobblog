@@ -12,10 +12,10 @@ const pretendard = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: 'dobbymin’s 개발 블로그',
+    default: 'Dobby is Free',
     template: '%s | dobbymin',
   },
-  description: '개발 경험을 기록합니다.',
+  description: 'Dobbymin 의 개발 블로그',
   icons: {
     apple: '/logo.png',
     icon: '/logo.png',
