@@ -4,6 +4,14 @@
 
 @font-face {
   font-display: swap;
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 300 700;
+  src: url('/fonts/FiraCode-VariableFont_wght.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
   font-family: 'Wotfard';
   font-style: normal;
   font-weight: 400;
@@ -21,9 +29,19 @@
   --soft: hsl(213deg 80% 96%);
   --accent: hsl(240deg 95% 62%);
   --accent-hover: hsl(240deg 78% 53%);
-  --code-background: hsl(222deg 24% 11%);
-  --code-foreground: hsl(220deg 14% 88%);
-  --code-border: hsl(222deg 20% 20%);
+  --code-background: #e8f1fc;
+  --code-foreground: #292929;
+  --code-highlight: #e9ebf2;
+  --code-comment: #5b637b;
+  --code-property: #db0079;
+  --code-boolean: #bd00b6;
+  --code-value: #576b75;
+  --code-string: #661fff;
+  --code-name: #a0f;
+  --code-deleted: #ff5757;
+  --code-regex: #3600d6;
+  --code-function: #3e5bfe;
+  --code-border: transparent;
   --color-sky-from: hsl(200deg 70% 78%);
   --color-sky-to: hsl(200deg 70% 70%);
   --color-sky-subtle: hsl(200deg 90% 88%);
@@ -46,7 +64,9 @@
   --about-project-ink: hsl(222deg 22% 10%);
   --about-project-muted: hsl(216deg 20% 31%);
   --font-sans: var(--font-pretendard), system-ui, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-mono:
+    'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
 }
 
 .dark {
@@ -58,9 +78,19 @@
   --soft: hsl(210deg 15% 12%);
   --accent: hsl(225deg 100% 75%);
   --accent-hover: hsl(225deg 100% 82%);
-  --code-background: hsl(210deg 16% 10%);
-  --code-foreground: hsl(210deg 16% 88%);
-  --code-border: hsl(210deg 15% 20%);
+  --code-background: #0d0f12;
+  --code-foreground: #fff;
+  --code-highlight: #202e3c;
+  --code-comment: #6c8a99;
+  --code-property: #ff38a9;
+  --code-boolean: #ffd500;
+  --code-value: #9ba6b0;
+  --code-string: #9a6bff;
+  --code-name: #c552ff;
+  --code-deleted: #ff5757;
+  --code-regex: #ffd500;
+  --code-function: #00bfff;
+  --code-border: transparent;
   --color-sky-from: hsl(214deg 40% 11%);
   --color-sky-to: hsl(200deg 50% 30%);
   --color-sky-subtle: hsl(210deg 40% 16%);
@@ -607,22 +637,19 @@ a:focus-visible {
 .prose {
   font-size: 1.125rem;
   line-height: 1.8;
+  overflow-wrap: break-word;
   padding-top: 0;
 }
 .prose h2 {
-  border-top: 1px solid var(--line);
   font-size: 2.125rem;
   font-weight: 700;
   letter-spacing: -0.015em;
   line-height: 1.3;
-  margin: 60px 0 24px;
-  padding-top: 28px;
+  margin: 72px 0 24px;
   scroll-margin-top: 160px;
 }
 .prose h2:first-child {
-  border-top: 0;
   margin-top: 0;
-  padding-top: 0;
 }
 .prose h3 {
   font-size: 1.75rem;
@@ -702,28 +729,28 @@ a:focus-visible {
 .prose pre {
   background: var(--code-background);
   border: 1px solid var(--code-border);
-  border-radius: 12px;
+  border-radius: 8px;
   color: var(--code-foreground);
   margin: 0;
   overflow-x: auto;
-  padding: 20px 20px 20px 20px;
+  padding: 20px 24px;
 }
 .prose pre code {
   background: transparent;
   color: var(--code-foreground);
   display: block;
   font-family: var(--font-mono);
-  font-size: 0.85rem;
-  line-height: 1.7;
+  font-size: 0.875rem;
+  line-height: 1.75;
   min-width: max-content;
   padding: 0;
 }
 .code-copy-button {
   align-items: center;
-  background: color-mix(in srgb, var(--code-foreground) 10%, transparent);
+  background: var(--code-highlight);
   border: 1px solid var(--code-border);
   border-radius: 8px;
-  color: var(--code-foreground);
+  color: var(--code-comment);
   cursor: pointer;
   display: inline-flex;
   height: 32px;
@@ -748,7 +775,12 @@ a:focus-visible {
   opacity: 1;
 }
 .code-copy-button:hover {
-  background: color-mix(in srgb, var(--code-foreground) 20%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--code-highlight) 75%,
+    var(--code-comment)
+  );
+  color: var(--code-foreground);
 }
 .code-copy-button[data-copied='true'] {
   color: hsl(140deg 60% 65%);
@@ -764,49 +796,58 @@ a:focus-visible {
 .prose pre .token.prolog,
 .prose pre .token.doctype,
 .prose pre .token.cdata {
-  color: hsl(220deg 10% 55%);
+  color: var(--code-comment);
 }
 .prose pre .token.punctuation {
-  color: hsl(220deg 12% 72%);
+  color: var(--code-foreground);
 }
 .prose pre .token.tag,
 .prose pre .token.attr-name,
-.prose pre .token.namespace,
+.prose pre .token.namespace {
+  color: var(--code-property);
+}
 .prose pre .token.deleted {
-  color: hsl(358deg 65% 68%);
+  color: var(--code-deleted);
 }
 .prose pre .token.function-name,
 .prose pre .token.function {
-  color: hsl(210deg 60% 68%);
+  color: var(--code-function);
 }
 .prose pre .token.boolean,
 .prose pre .token.number {
-  color: hsl(28deg 85% 62%);
+  color: var(--code-boolean);
+}
+.prose pre .token.number {
+  color: var(--code-value);
 }
 .prose pre .token.property,
-.prose pre .token.class-name,
 .prose pre .token.constant,
 .prose pre .token.symbol {
-  color: hsl(44deg 90% 66%);
+  color: var(--code-property);
+}
+.prose pre .token.class-name {
+  color: var(--code-name);
 }
 .prose pre .token.selector,
 .prose pre .token.important,
 .prose pre .token.atrule,
 .prose pre .token.keyword,
 .prose pre .token.builtin {
-  color: hsl(291deg 40% 70%);
+  color: var(--code-name);
 }
 .prose pre .token.string,
 .prose pre .token.char,
 .prose pre .token.attr-value,
-.prose pre .token.regex,
 .prose pre .token.variable {
-  color: hsl(136deg 40% 64%);
+  color: var(--code-string);
+}
+.prose pre .token.regex {
+  color: var(--code-regex);
 }
 .prose pre .token.operator,
 .prose pre .token.entity,
 .prose pre .token.url {
-  color: hsl(180deg 52% 60%);
+  color: var(--code-foreground);
 }
 .prose pre .token.bold {
   font-weight: 700;
@@ -815,10 +856,15 @@ a:focus-visible {
   font-style: italic;
 }
 .prose pre .token.inserted {
-  color: hsl(136deg 45% 60%);
+  color: var(--code-string);
 }
 .prose pre .code-line {
   display: block;
+}
+.prose pre .code-line.highlight-line {
+  background: var(--code-highlight);
+  margin-inline: -24px;
+  padding-inline: 24px;
 }
 .prose blockquote {
   border-left: 3px solid var(--accent);
@@ -1857,13 +1903,23 @@ a:focus-visible {
   .prose h2 {
     font-size: 1.75rem;
     line-height: 1.3;
-    margin: 44px 0 20px;
-    padding-top: 24px;
+    margin: 56px 0 20px;
   }
   .prose h3 {
     font-size: 1.375rem;
     line-height: 1.35;
     margin: 34px 0 14px;
+  }
+  .prose pre {
+    padding: 16px 18px;
+  }
+  .prose pre code {
+    font-size: 0.8125rem;
+    line-height: 1.7;
+  }
+  .prose pre .code-line.highlight-line {
+    margin-inline: -18px;
+    padding-inline: 18px;
   }
   .article-pagination {
     gap: 12px;
