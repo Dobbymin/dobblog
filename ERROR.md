@@ -1,5 +1,26 @@
 # 작업 오류 기록
 
+## 2026-08-06 — GitHub Pages deployment queue timeout
+
+### 발생한 오류
+
+- 커밋 `8496f0a`의 test, lint, build, artifact 업로드는 성공했지만 `actions/deploy-pages@v5`가 `deployment_queued` 상태에서 10분간 진행되지 않아 실패했다.
+- deploy action이 기본 제한인 600,000ms에 도달해 Pages deployment를 취소했다.
+- 실패한 deploy job만 재실행했지만 같은 `pages_build_version`과 artifact를 재사용해 기존 canceled deployment가 반환됐고, 12초 만에 `Deployment cancelled.`로 다시 실패했다.
+
+### 원인
+
+- workflow나 정적 산출물 오류가 아니라 GitHub Pages backend가 생성된 deployment를 처리하지 못한 외부 queue 지연이었다.
+- GitHub Status의 Actions와 Pages는 operational이었으므로 전체 서비스 장애 신호는 없었다.
+- canceled Pages deployment를 같은 commit SHA로 재시도하면 새 deployment가 생성될 것이라고 잘못 판단했다.
+
+### 수정 및 반복 방지 규칙
+
+1. build와 deploy 실패를 구분하고 첫 `deployment_queued` timeout에서는 workflow 제한 시간을 늘리거나 Pages 설정을 재생성하지 않는다.
+2. canceled Pages deployment는 실패 job 재실행 전에 commit SHA와 Pages build version 재사용 여부를 확인한다.
+3. 같은 build version이 즉시 `Deployment cancelled.`를 반환하면 새 commit SHA로 전체 workflow와 artifact를 다시 생성한다.
+4. 성공 후 공개 asset과 실제 스크롤 UI를 다시 검증한다.
+
 ## 2026-08-06 — 아티클 스크롤 헤더의 투명 배경
 
 ### 발생한 오류
