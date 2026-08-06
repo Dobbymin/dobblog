@@ -1,5 +1,50 @@
 # 작업 오류 기록
 
+## 2026-08-06 — 헤더 variant CSS의 font override 누락
+
+### 발생한 오류
+
+- 공통 `.wordmark`에 `Fira Code`를 적용했지만 홈·아티클·About 헤더에서는 기존 variant 선택자가 `Pretendard`를 다시 적용했다.
+
+### 원인
+
+- 공통 스타일만 수정하고 더 높은 specificity를 가진 `.home-site-header .wordmark`, `.article-site-header .wordmark`, `.about-site-header .wordmark` override를 함께 점검하지 않았다.
+
+### 수정 및 반복 방지 규칙
+
+1. 공통 컴포넌트 스타일 변경 시 variant·responsive override를 함께 검색한다.
+2. CSS font 변경 후 실제 적용 대상 선택자와 specificity를 확인한다.
+
+## 2026-08-06 — Fira Code의 `next/font/local` 파서 호환성
+
+### 발생한 오류
+
+- `public/fonts/FiraCode-VariableFont_wght.woff2`를 `next/font/local`로 등록한 production build가 `unexpected data version`으로 실패했다.
+
+### 원인
+
+- local font 파일이 존재하고 시스템 font scanner가 읽을 수 있다는 점만 확인하고, Next.js font loader의 파서 호환성을 확인하지 않았다.
+
+### 수정 및 반복 방지 규칙
+
+1. 새 local font는 적용 직후 production build로 `next/font/local` 파싱을 확인한다.
+2. loader가 특정 WOFF2를 처리하지 못하면 public asset의 `@font-face` 선언으로 범위를 제한해 적용하고, Next.js font loader 등록은 제거한다.
+
+## 2026-08-06 — 도구 결과 구조 추정
+
+### 발생한 오류
+
+- 웹 검색 도구 결과를 `content` 배열로 가정해 읽으려다 `TypeError: Cannot read properties of undefined (reading 'map')`가 발생했다.
+
+### 원인
+
+- 도구별 반환 형식을 확인하지 않고 공통 결과 구조를 추정했다.
+
+### 수정 및 반복 방지 규칙
+
+1. 새 도구 결과는 먼저 반환 객체의 실제 필드를 확인한 뒤 후속 처리를 작성한다.
+2. 도구 호출을 전달하는 래퍼에서는 누락 가능한 필드에 안전한 fallback을 둔다.
+
 ## 2026-08-06 — GitHub Pages deployment queue timeout
 
 ### 발생한 오류
