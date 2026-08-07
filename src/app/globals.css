@@ -242,6 +242,30 @@ a:focus-visible {
 .mobile-nav {
   display: none;
 }
+.mobile-nav-content {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: 0 10px 24px #0b16301a;
+  color: hsl(222deg 22% 5%);
+  font-family: 'Wotfard', var(--font-geist-sans), var(--font-sans);
+  overflow: hidden;
+}
+.mobile-nav-item {
+  border-radius: 0;
+  color: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.875rem 1rem;
+}
+.mobile-nav-item:focus {
+  background: var(--soft);
+  color: var(--accent);
+}
+.mobile-nav-separator {
+  background: var(--line);
+  margin: 0;
+}
 
 .search-overlay {
   animation: search-overlay-slide-in 833ms
@@ -1432,47 +1456,6 @@ a:focus-visible {
   margin: 0;
   position: absolute;
 }
-.mobile-nav-overlay {
-  align-items: flex-start;
-  background: color-mix(in srgb, #000 42%, transparent);
-  display: flex;
-  inset: 0;
-  justify-content: flex-end;
-  position: fixed;
-  z-index: 50;
-}
-.mobile-nav-dialog {
-  background: var(--background);
-  box-shadow: -15px 0 48px #0003;
-  height: 100%;
-  padding: 22px;
-  width: min(320px, 88vw);
-}
-.mobile-nav-topline {
-  align-items: center;
-  display: flex;
-  font-family: var(--font-geist-sans), var(--font-sans);
-  font-weight: 700;
-  justify-content: space-between;
-}
-.mobile-nav-dialog nav {
-  display: grid;
-  font-family: 'Wotfard', var(--font-geist-sans), var(--font-sans);
-  margin-top: 56px;
-}
-.mobile-nav-dialog nav a,
-.mobile-nav-dialog nav button {
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid var(--line);
-  color: inherit;
-  cursor: pointer;
-  font-size: 1.3rem;
-  font-weight: 680;
-  padding: 17px 0;
-  text-align: left;
-}
-
 .home-site-header,
 .about-site-header {
   --home-header-offset: 32px;

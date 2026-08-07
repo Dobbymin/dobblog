@@ -1,80 +1,78 @@
 'use client';
 
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+import { useState } from 'react';
 
 import { EXTERNAL_ROUTES_PATH, ROUTES_PATH } from '@/constants';
-import { useMobileNav } from '@/hooks';
 import { Menu, X } from 'lucide-react';
 
-import { Button } from '../ui';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectSeparator,
+  SelectTrigger,
+} from '../ui';
 
 export function MobileNav() {
-  const { closeMenu, dialogRef, isOpen, menuButtonRef, openMenu } =
-    useMobileNav();
+  const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+  const handleValueChange = (value: string | null) => {
+    if (value === 'about') {
+      router.push(ROUTES_PATH.ABOUT, {
+        transitionTypes: ['article-forward'],
+      });
+    }
+
+    if (value === 'linkedin' || value === 'github') {
+      window.open(
+        value === 'linkedin'
+          ? EXTERNAL_ROUTES_PATH.LINKEDIN
+          : EXTERNAL_ROUTES_PATH.GITHUB,
+        '_blank',
+        'noopener,noreferrer',
+      );
+    }
+  };
 
   return (
     <div className='mobile-nav'>
-      <Button
-        aria-controls='mobile-navigation'
-        aria-expanded={isOpen}
-        aria-label='메뉴 열기'
-        className='icon-button'
-        onClick={openMenu}
-        ref={menuButtonRef}
-        size='icon'
-        variant='ghost'
+      <Select
+        modal={false}
+        onOpenChange={setIsOpen}
+        onValueChange={handleValueChange}
+        open={isOpen}
       >
-        <Menu className='size-5' size={20} />
-      </Button>
-      {isOpen && (
-        <div className='mobile-nav-overlay' onMouseDown={closeMenu}>
-          <div
-            aria-label='모바일 내비게이션'
-            aria-modal='true'
-            className='mobile-nav-dialog'
-            id='mobile-navigation'
-            onMouseDown={(event) => event.stopPropagation()}
-            ref={dialogRef}
-            role='dialog'
-          >
-            <div className='mobile-nav-topline'>
-              <span aria-hidden='true' className='brand-mark' />
-              <Button
-                aria-label='메뉴 닫기'
-                className='icon-button'
-                onClick={closeMenu}
-                size='icon'
-                variant='ghost'
-              >
-                <X className='size-5' size={20} />
-              </Button>
-            </div>
-            <nav>
-              <a
-                href={EXTERNAL_ROUTES_PATH.LINKEDIN}
-                rel='noreferrer'
-                target='_blank'
-              >
-                LinkedIn
-              </a>
-              <a
-                href={EXTERNAL_ROUTES_PATH.GITHUB}
-                rel='noreferrer'
-                target='_blank'
-              >
-                GitHub
-              </a>
-              <Link
-                href={ROUTES_PATH.ABOUT}
-                onClick={closeMenu}
-                transitionTypes={['article-forward']}
-              >
-                About
-              </Link>
-            </nav>
-          </div>
-        </div>
-      )}
+        <SelectTrigger
+          aria-label={isOpen ? '메뉴 닫기' : '메뉴 열기'}
+          className='icon-button mobile-nav-trigger [&>svg:last-child]:hidden'
+        >
+          {isOpen ? (
+            <X className='size-5' size={20} />
+          ) : (
+            <Menu className='size-5' size={20} />
+          )}
+        </SelectTrigger>
+        <SelectContent
+          align='end'
+          className='mobile-nav-content min-w-48'
+          side='bottom'
+        >
+          <SelectItem className='mobile-nav-item' value='linkedin'>
+            LinkedIn
+          </SelectItem>
+          <SelectSeparator className='mobile-nav-separator' />
+          <SelectItem className='mobile-nav-item' value='github'>
+            GitHub
+          </SelectItem>
+          <SelectSeparator className='mobile-nav-separator' />
+          <SelectItem className='mobile-nav-item' value='about'>
+            About
+          </SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 }
